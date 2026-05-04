@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StatHammer.Server.Data;
+using StatHammer.Server.Mappings;
+using StatHammer.Server.Models.DTOs.Units;
 using StatHammer.Server.Models.Entities;
 
 namespace StatHammer.Server.Controllers
@@ -17,7 +19,7 @@ namespace StatHammer.Server.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Unit>>> GetUnits()
+        public async Task<ActionResult<IEnumerable<UnitReadDto>>> GetUnits()
         {
             var units = await _context.Units
                 .Include(u => u.UnitModels)
@@ -34,11 +36,11 @@ namespace StatHammer.Server.Controllers
                         .ThenInclude(oi => oi.Wargear)
                 .ToListAsync();
 
-            return Ok(units);
+            return Ok(units.Select(u => u.ToReadDto()));
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Unit>> GetUnit(int id)
+        public async Task<ActionResult<UnitReadDto>> GetUnit(int id)
         {
             var unit = await _context.Units
                 .Include(u => u.UnitModels)
@@ -60,16 +62,18 @@ namespace StatHammer.Server.Controllers
                 return NotFound();
             }
 
-            return Ok(unit);
+            return Ok(unit.ToReadDto());
         }
 
         [HttpPost]
-        public async Task<ActionResult<Unit>> CreateUnit(Unit unit)
+        public async Task<ActionResult<UnitReadDto>> CreateUnit(UnitCreateDto dto)
         {
+            var unit = dto.ToEntity();
+
             _context.Units.Add(unit);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUnit), new { id = unit.Id }, unit);
+            return CreatedAtAction(nameof(GetUnit), new { id = unit.Id }, unit.ToReadDto());
         }
     }
 }
