@@ -19,18 +19,46 @@ namespace StatHammer.Server.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Unit>>> GetUnits()
         {
-            var units = await _context.Units.ToListAsync();
+            var units = await _context.Units
+                .Include(u => u.UnitModels)
+                    .ThenInclude(um => um.Model)
+                .Include(u => u.UnitAbilities)
+                    .ThenInclude(ua => ua.Ability)
+                .Include(u => u.UnitKeywords)
+                    .ThenInclude(uk => uk.Keyword)
+                .Include(u => u.UnitOptions)
+                    .ThenInclude(uo => uo.OptionItems)
+                        .ThenInclude(oi => oi.Weapon)
+                .Include(u => u.UnitOptions)
+                    .ThenInclude(uo => uo.OptionItems)
+                        .ThenInclude(oi => oi.Wargear)
+                .ToListAsync();
+
             return Ok(units);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult<Unit>> GetUnit(int id)
         {
-            var unit = await _context.Units.FindAsync(id);
+            var unit = await _context.Units
+                .Include(u => u.UnitModels)
+                    .ThenInclude(um => um.Model)
+                .Include(u => u.UnitAbilities)
+                    .ThenInclude(ua => ua.Ability)
+                .Include(u => u.UnitKeywords)
+                    .ThenInclude(uk => uk.Keyword)
+                .Include(u => u.UnitOptions)
+                    .ThenInclude(uo => uo.OptionItems)
+                        .ThenInclude(oi => oi.Weapon)
+                .Include(u => u.UnitOptions)
+                    .ThenInclude(uo => uo.OptionItems)
+                        .ThenInclude(oi => oi.Wargear)
+                .FirstOrDefaultAsync(u => u.Id == id);
 
-            if (unit == null)            
+            if (unit == null)
+            {
                 return NotFound();
-            
+            }
 
             return Ok(unit);
         }

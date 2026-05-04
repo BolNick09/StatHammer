@@ -23,6 +23,12 @@ namespace StatHammer.Server.Data
         public DbSet<ModelWargear> ModelWargears { get; set; }
         public DbSet<ModelAbility> ModelAbilities { get; set; }
 
+        public DbSet<UnitModel> UnitModels { get; set; }
+        public DbSet<UnitAbility> UnitAbilities { get; set; }
+        public DbSet<UnitKeyword> UnitKeywords { get; set; }
+        public DbSet<UnitOption> UnitOptions { get; set; }
+        public DbSet<OptionItem> OptionItems { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -196,6 +202,118 @@ namespace StatHammer.Server.Data
 
                 entity.HasIndex(e => new { e.ModelId, e.AbilityId })
                     .IsUnique();
+            });
+
+            modelBuilder.Entity<Unit>(entity =>
+            {
+                entity.ToTable("Units");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                    .IsRequired();
+            });
+
+            modelBuilder.Entity<UnitModel>(entity =>
+            {
+                entity.ToTable("UnitModels");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.MinCount)
+                    .IsRequired();
+
+                entity.Property(e => e.MaxCount)
+                    .IsRequired();
+
+                entity.HasOne(e => e.Unit)
+                    .WithMany(u => u.UnitModels)
+                    .HasForeignKey(e => e.UnitId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Model)
+                    .WithMany()
+                    .HasForeignKey(e => e.ModelId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.UnitId, e.ModelId })
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<UnitAbility>(entity =>
+            {
+                entity.ToTable("UnitAbilities");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Unit)
+                    .WithMany(u => u.UnitAbilities)
+                    .HasForeignKey(e => e.UnitId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Ability)
+                    .WithMany()
+                    .HasForeignKey(e => e.AbilityId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.UnitId, e.AbilityId })
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<UnitKeyword>(entity =>
+            {
+                entity.ToTable("UnitKeywords");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.Unit)
+                    .WithMany(u => u.UnitKeywords)
+                    .HasForeignKey(e => e.UnitId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Keyword)
+                    .WithMany()
+                    .HasForeignKey(e => e.KeywordId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.UnitId, e.KeywordId })
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<UnitOption>(entity =>
+            {
+                entity.ToTable("UnitOptions");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.Name)
+                    .IsRequired();
+
+                entity.Property(e => e.MaxSelections)
+                    .IsRequired();
+
+                entity.Property(e => e.GroupKey);
+
+                entity.HasOne(e => e.Unit)
+                    .WithMany(u => u.UnitOptions)
+                    .HasForeignKey(e => e.UnitId)
+                    .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<OptionItem>(entity =>
+            {
+                entity.ToTable("OptionItems");
+                entity.HasKey(e => e.Id);
+
+                entity.HasOne(e => e.UnitOption)
+                    .WithMany(uo => uo.OptionItems)
+                    .HasForeignKey(e => e.UnitOptionId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany()
+                    .HasForeignKey(e => e.WeaponId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Wargear)
+                    .WithMany()
+                    .HasForeignKey(e => e.WargearId)
+                    .OnDelete(DeleteBehavior.Cascade);
             });
         }
     }
