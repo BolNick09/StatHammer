@@ -29,6 +29,11 @@ namespace StatHammer.Server.Data
         public DbSet<UnitOption> UnitOptions { get; set; }
         public DbSet<OptionItem> OptionItems { get; set; }
 
+
+        public DbSet<SimulationResult> SimulationResults { get; set; }
+        public DbSet<TurnStat> TurnStats { get; set; }
+        public DbSet<WeaponStat> WeaponStats { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
@@ -314,6 +319,94 @@ namespace StatHammer.Server.Data
                     .WithMany()
                     .HasForeignKey(e => e.WargearId)
                     .OnDelete(DeleteBehavior.Cascade);
+            });
+
+            modelBuilder.Entity<SimulationResult>(entity =>
+            {
+                entity.ToTable("SimulationResults");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.SimulationCount)
+                    .IsRequired();
+
+                entity.Property(e => e.CreatedAtUtc)
+                    .IsRequired();
+
+                entity.HasOne(e => e.UnitA)
+                    .WithMany()
+                    .HasForeignKey(e => e.UnitAId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasOne(e => e.UnitB)
+                    .WithMany()
+                    .HasForeignKey(e => e.UnitBId)
+                    .OnDelete(DeleteBehavior.Restrict);
+            });
+
+            modelBuilder.Entity<TurnStat>(entity =>
+            {
+                entity.ToTable("TurnStats");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.TurnNumber)
+                    .IsRequired();
+
+                entity.Property(e => e.Side)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgModelsAlive)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgWoundsAlive)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgHits)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgWounds)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgSuccessfulSaves)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgBlockedByFnp)
+                    .IsRequired();
+
+                entity.HasOne(e => e.SimulationResult)
+                    .WithMany(sr => sr.TurnStats)
+                    .HasForeignKey(e => e.SimulationResultId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasIndex(e => new { e.SimulationResultId, e.TurnNumber, e.Side })
+                    .IsUnique();
+            });
+
+            modelBuilder.Entity<WeaponStat>(entity =>
+            {
+                entity.ToTable("WeaponStats");
+                entity.HasKey(e => e.Id);
+
+                entity.Property(e => e.AvgHits)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgWounds)
+                    .IsRequired();
+
+                entity.Property(e => e.AvgDamage)
+                    .IsRequired();
+
+                entity.HasOne(e => e.TurnStat)
+                    .WithMany(ts => ts.WeaponStats)
+                    .HasForeignKey(e => e.TurnStatId)
+                    .OnDelete(DeleteBehavior.Cascade);
+
+                entity.HasOne(e => e.Weapon)
+                    .WithMany()
+                    .HasForeignKey(e => e.WeaponId)
+                    .OnDelete(DeleteBehavior.Restrict);
+
+                entity.HasIndex(e => new { e.TurnStatId, e.WeaponId })
+                    .IsUnique();
             });
         }
     }
