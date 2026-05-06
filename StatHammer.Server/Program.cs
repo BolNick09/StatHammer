@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using StatHammer.Server.Data;
+using StatHammer.Server.Simulation.Services;
 
 
 
@@ -18,6 +19,8 @@ namespace StatHammer.Server
 
             builder.Services.AddDbContext<StatHammerDbContext>(options =>
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+            builder.Services.AddScoped<IUnitRuntimeBuilder, UnitRuntimeBuilder>();
 
             var app = builder.Build();
 
