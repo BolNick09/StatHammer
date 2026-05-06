@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using StatHammer.Server.Data;
 using StatHammer.Server.Simulation.Services;
 using StatHammer.Server.Simulation.Dice.Services;
+using StatHammer.Server.Simulation.Combat.Services;
 
 
 
@@ -22,8 +23,12 @@ namespace StatHammer.Server
                 options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
 
             builder.Services.AddScoped<IUnitRuntimeBuilder, UnitRuntimeBuilder>();
+
             builder.Services.AddScoped<IDiceExpressionParser, DiceExpressionParser>();
             builder.Services.AddScoped<IDiceRoller, DiceRoller>();
+
+            builder.Services.AddScoped<ICombatDiceService, CombatDiceService>();
+            builder.Services.AddScoped<IAttackResolver, AttackResolver>();
 
 
             var app = builder.Build();

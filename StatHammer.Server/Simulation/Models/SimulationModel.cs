@@ -22,6 +22,8 @@
 
         public int OC { get; set; }
 
+        public int? FeelNoPain { get; set; }
+
         public List<SimulationWeapon> Weapons { get; set; } = new();
 
         public List<string> Abilities { get; set; } = new();
