@@ -5,15 +5,15 @@ namespace StatHammer.Server.Simulation.Combat.Services
 {
     public class DamageAllocator : IDamageAllocator
     {
-        public DamageAllocationResult ApplyDamage(SimulationUnit defender, int incomingDamage)
+        public DamageAllocationResult ApplyDamage(SimulationUnit defender, IReadOnlyCollection<int> damagePackets)
         {
             var result = new DamageAllocationResult
             {
                 DefendingUnitName = defender.Name,
-                IncomingDamage = incomingDamage
+                IncomingDamage = damagePackets.Sum()
             };
 
-            if (incomingDamage <= 0)
+            if (damagePackets.Count == 0)
             {
                 result.RemainingAliveModels = defender.AliveModelCount;
                 result.RemainingTotalWounds = defender.TotalCurrentWounds;
@@ -21,23 +21,29 @@ namespace StatHammer.Server.Simulation.Combat.Services
             }
 
             var aliveModelsBefore = defender.AliveModelCount;
-            var damageLeft = incomingDamage;
 
-            foreach (var model in defender.Models.Where(m => m.IsAlive))
+            foreach (var packet in damagePackets)
             {
-                if (damageLeft <= 0)
+                if (packet <= 0)
                 {
-                    break;
+                    continue;
                 }
 
-                var damageToApply = Math.Min(model.CurrentWounds, damageLeft);
+                var targetModel = defender.Models.FirstOrDefault(m => m.IsAlive);
+                if (targetModel == null)
+                {
+                    result.WastedDamage += packet;
+                    continue;
+                }
 
-                model.CurrentWounds -= damageToApply;
-                damageLeft -= damageToApply;
-                result.AppliedDamage += damageToApply;
+                var appliedToThisModel = Math.Min(targetModel.CurrentWounds, packet);
+                targetModel.CurrentWounds -= appliedToThisModel;
+                result.AppliedDamage += appliedToThisModel;
+
+                var wastedFromPacket = packet - appliedToThisModel;
+                result.WastedDamage += wastedFromPacket;
             }
 
-            result.WastedDamage = damageLeft;
             result.ModelsKilled = aliveModelsBefore - defender.AliveModelCount;
             result.RemainingAliveModels = defender.AliveModelCount;
             result.RemainingTotalWounds = defender.TotalCurrentWounds;

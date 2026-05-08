@@ -5,6 +5,6 @@ namespace StatHammer.Server.Simulation.Combat.Services
 {
     public interface IDamageAllocator
     {
-        DamageAllocationResult ApplyDamage(SimulationUnit defender, int incomingDamage);
+        DamageAllocationResult ApplyDamage(SimulationUnit defender, IReadOnlyCollection<int> damagePackets);
     }
 }

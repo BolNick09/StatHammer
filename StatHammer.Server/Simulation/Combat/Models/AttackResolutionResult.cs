@@ -19,5 +19,7 @@
         public int BlockedByFnp { get; set; }
 
         public int FinalDamage { get; set; }
+
+        public List<int> DamagePackets { get; set; } = new();
     }
 }

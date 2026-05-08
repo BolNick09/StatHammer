@@ -109,7 +109,7 @@ namespace StatHammer.Server.Controllers
                 return BadRequest($"Defender unit {dto.DefenderUnitId} not found.");
             }
 
-            var allocationResult = _damageAllocator.ApplyDamage(defender, dto.Damage);
+            var allocationResult = _damageAllocator.ApplyDamage(defender, dto.DamagePackets);
 
             return Ok(new
             {

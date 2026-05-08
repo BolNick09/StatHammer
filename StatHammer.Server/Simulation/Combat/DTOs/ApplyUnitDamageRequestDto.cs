@@ -4,7 +4,7 @@
     {
         public int DefenderUnitId { get; set; }
 
-        public int Damage { get; set; }
+        public List<int> DamagePackets { get; set; } = new();
 
         public bool DefenderPrefersMelee { get; set; }
     }

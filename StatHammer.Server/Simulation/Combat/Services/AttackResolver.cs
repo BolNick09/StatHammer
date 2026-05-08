@@ -21,10 +21,10 @@ namespace StatHammer.Server.Simulation.Combat.Services
         }
 
         public AttackResolutionResult ResolveAttack(
-            SimulationModel attacker,
-            SimulationModel defender,
-            SimulationWeapon weapon,
-            SimulationWeaponProfile weaponProfile)
+    SimulationModel attacker,
+    SimulationModel defender,
+    SimulationWeapon weapon,
+    SimulationWeaponProfile weaponProfile)
         {
             var attacks = RollExpressionTotal(weaponProfile.Attacks);
             var hits = _combatDiceService.CountSuccesses(attacks, weaponProfile.Skill);
@@ -37,21 +37,33 @@ namespace StatHammer.Server.Simulation.Combat.Services
 
             var unsavedWounds = Math.Max(0, wounds - successfulSaves);
 
+            var damagePackets = new List<int>();
             var damageBeforeFnp = 0;
+            var blockedByFnp = 0;
+
             for (int i = 0; i < unsavedWounds; i++)
             {
-                damageBeforeFnp += RollExpressionTotal(weaponProfile.Damage);
+                var damageRoll = RollExpressionTotal(weaponProfile.Damage);
+                damageBeforeFnp += damageRoll;
+
+                var blockedForThisPacket = 0;
+                if (defender.FeelNoPain.HasValue)
+                {
+                    blockedForThisPacket = _combatDiceService.CountSuccesses(
+                        damageRoll,
+                        defender.FeelNoPain.Value);
+                }
+
+                blockedByFnp += blockedForThisPacket;
+
+                var finalPacketDamage = Math.Max(0, damageRoll - blockedForThisPacket);
+                if (finalPacketDamage > 0)
+                {
+                    damagePackets.Add(finalPacketDamage);
+                }
             }
 
-            var blockedByFnp = 0;
-            if (defender.FeelNoPain.HasValue)
-            {
-                blockedByFnp = _combatDiceService.CountSuccesses(
-                    damageBeforeFnp,
-                    defender.FeelNoPain.Value);
-            }
-
-            var finalDamage = Math.Max(0, damageBeforeFnp - blockedByFnp);
+            var finalDamage = damagePackets.Sum();
 
             return new AttackResolutionResult
             {
@@ -63,7 +75,8 @@ namespace StatHammer.Server.Simulation.Combat.Services
                 SuccessfulSaves = successfulSaves,
                 DamageBeforeFnp = damageBeforeFnp,
                 BlockedByFnp = blockedByFnp,
-                FinalDamage = finalDamage
+                FinalDamage = finalDamage,
+                DamagePackets = damagePackets
             };
         }
 
