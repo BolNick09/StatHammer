@@ -3,6 +3,7 @@ using StatHammer.Server.Data;
 using StatHammer.Server.Simulation.Services;
 using StatHammer.Server.Simulation.Dice.Services;
 using StatHammer.Server.Simulation.Combat.Services;
+using StatHammer.Server.Simulation.Battle.Services;
 
 
 
@@ -32,6 +33,7 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IUnitAttackResolver, UnitAttackResolver>();
             builder.Services.AddScoped<IDamageAllocator, DamageAllocator>();
             builder.Services.AddScoped<IUnitCombatResolver, UnitCombatResolver>();
+            builder.Services.AddScoped<IBattleSimulationService, BattleSimulationService>();
 
 
             var app = builder.Build();
