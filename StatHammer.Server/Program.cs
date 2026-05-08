@@ -30,6 +30,7 @@ namespace StatHammer.Server
             builder.Services.AddScoped<ICombatDiceService, CombatDiceService>();
             builder.Services.AddScoped<IAttackResolver, AttackResolver>();
             builder.Services.AddScoped<IUnitAttackResolver, UnitAttackResolver>();
+            builder.Services.AddScoped<IDamageAllocator, DamageAllocator>();
 
 
             var app = builder.Build();

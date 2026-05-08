@@ -13,18 +13,21 @@ namespace StatHammer.Server.Controllers
         private readonly IAttackResolver _attackResolver;
         private readonly IUnitAttackResolver _unitAttackResolver;
         private readonly IUnitRuntimeBuilder _unitRuntimeBuilder;
+        private readonly IDamageAllocator _damageAllocator;
 
         public CombatDebugController(
             IAttackResolver attackResolver,
             IUnitAttackResolver unitAttackResolver,
-            IUnitRuntimeBuilder unitRuntimeBuilder)
+            IUnitRuntimeBuilder unitRuntimeBuilder,
+            IDamageAllocator damageAllocator)
         {
             _attackResolver = attackResolver;
             _unitAttackResolver = unitAttackResolver;
             _unitRuntimeBuilder = unitRuntimeBuilder;
+            _damageAllocator = damageAllocator;
         }
 
-        [HttpPost("resolve-attack")]
+        [HttpPost("resolve-attack-depr")]
         public IActionResult ResolveAttack(TestAttackRequestDto dto)
         {
             var attacker = new SimulationModel
@@ -96,6 +99,23 @@ namespace StatHammer.Server.Controllers
             var result = _unitAttackResolver.ResolveRangedAttack(attacker, defender);
 
             return Ok(result);
+        }
+        [HttpPost("apply-unit-damage")]
+        public async Task<IActionResult> ApplyUnitDamage(ApplyUnitDamageRequestDto dto)
+        {
+            var defender = await _unitRuntimeBuilder.BuildUnitAsync(dto.DefenderUnitId, dto.DefenderPrefersMelee);
+            if (defender == null)
+            {
+                return BadRequest($"Defender unit {dto.DefenderUnitId} not found.");
+            }
+
+            var allocationResult = _damageAllocator.ApplyDamage(defender, dto.Damage);
+
+            return Ok(new
+            {
+                allocation = allocationResult,
+                defenderState = defender
+            });
         }
     }
 }
