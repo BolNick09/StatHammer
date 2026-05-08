@@ -14,17 +14,20 @@ namespace StatHammer.Server.Controllers
         private readonly IUnitAttackResolver _unitAttackResolver;
         private readonly IUnitRuntimeBuilder _unitRuntimeBuilder;
         private readonly IDamageAllocator _damageAllocator;
+        private readonly IUnitCombatResolver _unitCombatResolver;
 
         public CombatDebugController(
             IAttackResolver attackResolver,
             IUnitAttackResolver unitAttackResolver,
             IUnitRuntimeBuilder unitRuntimeBuilder,
-            IDamageAllocator damageAllocator)
+            IDamageAllocator damageAllocator,
+            IUnitCombatResolver unitCombatResolver)
         {
             _attackResolver = attackResolver;
             _unitAttackResolver = unitAttackResolver;
             _unitRuntimeBuilder = unitRuntimeBuilder;
             _damageAllocator = damageAllocator;
+            _unitCombatResolver = unitCombatResolver;
         }
 
         [HttpPost("resolve-attack-depr")]
@@ -115,6 +118,29 @@ namespace StatHammer.Server.Controllers
             {
                 allocation = allocationResult,
                 defenderState = defender
+            });
+        }
+        [HttpPost("resolve-unit-ranged-phase")]
+        public async Task<IActionResult> ResolveUnitRangedPhase(UnitAttackTestRequestDto dto)
+        {
+            var attacker = await _unitRuntimeBuilder.BuildUnitAsync(dto.AttackerUnitId, dto.AttackerPrefersMelee);
+            if (attacker == null)
+            {
+                return BadRequest($"Attacker unit {dto.AttackerUnitId} not found.");
+            }
+
+            var defender = await _unitRuntimeBuilder.BuildUnitAsync(dto.DefenderUnitId, dto.DefenderPrefersMelee);
+            if (defender == null)
+            {
+                return BadRequest($"Defender unit {dto.DefenderUnitId} not found.");
+            }
+
+            var result = _unitCombatResolver.ResolveRangedPhase(attacker, defender);
+
+            return Ok(new
+            {
+                phaseResult = result,
+                defenderStateAfterAttack = defender
             });
         }
     }
