@@ -2,6 +2,7 @@
 using StatHammer.Server.Simulation.Combat.DTOs;
 using StatHammer.Server.Simulation.Combat.Services;
 using StatHammer.Server.Simulation.Models;
+using StatHammer.Server.Simulation.Services;
 
 namespace StatHammer.Server.Controllers
 {
@@ -10,10 +11,17 @@ namespace StatHammer.Server.Controllers
     public class CombatDebugController : ControllerBase
     {
         private readonly IAttackResolver _attackResolver;
+        private readonly IUnitAttackResolver _unitAttackResolver;
+        private readonly IUnitRuntimeBuilder _unitRuntimeBuilder;
 
-        public CombatDebugController(IAttackResolver attackResolver)
+        public CombatDebugController(
+            IAttackResolver attackResolver,
+            IUnitAttackResolver unitAttackResolver,
+            IUnitRuntimeBuilder unitRuntimeBuilder)
         {
             _attackResolver = attackResolver;
+            _unitAttackResolver = unitAttackResolver;
+            _unitRuntimeBuilder = unitRuntimeBuilder;
         }
 
         [HttpPost("resolve-attack")]
@@ -66,6 +74,26 @@ namespace StatHammer.Server.Controllers
             };
 
             var result = _attackResolver.ResolveAttack(attacker, defender, weapon, profile);
+
+            return Ok(result);
+        }
+
+        [HttpPost("resolve-unit-ranged-attack")]
+        public async Task<IActionResult> ResolveUnitRangedAttack(UnitAttackTestRequestDto dto)
+        {
+            var attacker = await _unitRuntimeBuilder.BuildUnitAsync(dto.AttackerUnitId, dto.AttackerPrefersMelee);
+            if (attacker == null)
+            {
+                return BadRequest($"Attacker unit {dto.AttackerUnitId} not found.");
+            }
+
+            var defender = await _unitRuntimeBuilder.BuildUnitAsync(dto.DefenderUnitId, dto.DefenderPrefersMelee);
+            if (defender == null)
+            {
+                return BadRequest($"Defender unit {dto.DefenderUnitId} not found.");
+            }
+
+            var result = _unitAttackResolver.ResolveRangedAttack(attacker, defender);
 
             return Ok(result);
         }
