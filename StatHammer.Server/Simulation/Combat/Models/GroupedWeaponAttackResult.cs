@@ -1,10 +1,12 @@
 ﻿namespace StatHammer.Server.Simulation.Combat.Models
 {
-    public class UnitAttackResult
+    public class GroupedWeaponAttackResult
     {
-        public string AttackingUnitName { get; set; } = string.Empty;
+        public string WeaponName { get; set; } = string.Empty;
 
-        public string DefendingUnitName { get; set; } = string.Empty;
+        public string? WeaponProfileName { get; set; }
+
+        public int Count { get; set; }
 
         public int TotalAttacks { get; set; }
 
@@ -19,8 +21,5 @@
         public int TotalBlockedByFnp { get; set; }
 
         public int TotalFinalDamage { get; set; }
-
-        public List<AttackResolutionResult> WeaponResults { get; set; } = new();
-        public List<GroupedWeaponAttackResult> GroupedWeaponResults { get; set; } = new();
     }
 }

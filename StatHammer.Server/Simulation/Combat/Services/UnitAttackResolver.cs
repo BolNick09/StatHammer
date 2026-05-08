@@ -23,10 +23,9 @@ namespace StatHammer.Server.Simulation.Combat.Services
             };
 
             var primaryDefender = defender.Models.FirstOrDefault(m => m.IsAlive);
-            if (primaryDefender == null)
-            {
+            if (primaryDefender == null)            
                 return result;
-            }
+
 
             foreach (var attackingModel in attacker.Models.Where(m => m.IsAlive))
             {
@@ -34,10 +33,9 @@ namespace StatHammer.Server.Simulation.Combat.Services
                 {
                     var selectedProfile = SelectBestRangedProfile(weapon);
 
-                    if (selectedProfile == null)
-                    {
+                    if (selectedProfile == null)                    
                         continue;
-                    }
+                    
 
                     var weaponResult = _attackResolver.ResolveAttack(
                         attackingModel,
@@ -56,6 +54,25 @@ namespace StatHammer.Server.Simulation.Combat.Services
                     result.TotalFinalDamage += weaponResult.FinalDamage;
                 }
             }
+
+            result.GroupedWeaponResults = result.WeaponResults
+                .GroupBy(wr => new { wr.WeaponName, wr.WeaponProfileName })
+                .Select(group => new GroupedWeaponAttackResult
+                {
+                    WeaponName = group.Key.WeaponName,
+                    WeaponProfileName = group.Key.WeaponProfileName,
+                    Count = group.Count(),
+                    TotalAttacks = group.Sum(x => x.Attacks),
+                    TotalHits = group.Sum(x => x.Hits),
+                    TotalWounds = group.Sum(x => x.Wounds),
+                    TotalSuccessfulSaves = group.Sum(x => x.SuccessfulSaves),
+                    TotalDamageBeforeFnp = group.Sum(x => x.DamageBeforeFnp),
+                    TotalBlockedByFnp = group.Sum(x => x.BlockedByFnp),
+                    TotalFinalDamage = group.Sum(x => x.FinalDamage)
+                })
+                .OrderBy(x => x.WeaponName)
+                .ThenBy(x => x.WeaponProfileName)
+                .ToList();
 
             return result;
         }
