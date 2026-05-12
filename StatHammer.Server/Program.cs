@@ -27,6 +27,7 @@ namespace StatHammer.Server
 
             builder.Services.AddScoped<IDiceExpressionParser, DiceExpressionParser>();
             builder.Services.AddScoped<IDiceRoller, DiceRoller>();
+            builder.Services.AddSingleton<IRandomProvider, ThreadSafeRandomProvider>();
 
             builder.Services.AddScoped<ICombatDiceService, CombatDiceService>();
 

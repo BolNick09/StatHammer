@@ -5,12 +5,14 @@ namespace StatHammer.Server.Simulation.Dice.Services
     public class DiceRoller : IDiceRoller
     {
         private readonly IDiceExpressionParser _parser;
-        private readonly Random _random;
+        private readonly IRandomProvider _randomProvider;
 
-        public DiceRoller(IDiceExpressionParser parser)
+        public DiceRoller(
+            IDiceExpressionParser parser,
+            IRandomProvider randomProvider)
         {
             _parser = parser;
-            _random = new Random();
+            _randomProvider = randomProvider;
         }
 
         public DiceRollResult Roll(string expression)
@@ -34,7 +36,7 @@ namespace StatHammer.Server.Simulation.Dice.Services
 
             for (int i = 0; i < expression.DiceCount; i++)
             {
-                result.Rolls.Add(_random.Next(1, expression.DiceSides + 1));
+                result.Rolls.Add(_randomProvider.Next(1, expression.DiceSides + 1));
             }
 
             return result;
