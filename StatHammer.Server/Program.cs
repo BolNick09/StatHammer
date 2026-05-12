@@ -29,11 +29,16 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IDiceRoller, DiceRoller>();
 
             builder.Services.AddScoped<ICombatDiceService, CombatDiceService>();
+
             builder.Services.AddScoped<IAttackResolver, AttackResolver>();
             builder.Services.AddScoped<IUnitAttackResolver, UnitAttackResolver>();
+
             builder.Services.AddScoped<IDamageAllocator, DamageAllocator>();
             builder.Services.AddScoped<IUnitCombatResolver, UnitCombatResolver>();
+
             builder.Services.AddScoped<IBattleSimulationService, BattleSimulationService>();
+
+            builder.Services.AddScoped<IBattleBatchSimulationService, BattleBatchSimulationService>();
 
 
             var app = builder.Build();
