@@ -39,6 +39,7 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IBattleSimulationService, BattleSimulationService>();
 
             builder.Services.AddScoped<IBattleBatchSimulationService, BattleBatchSimulationService>();
+            builder.Services.AddScoped<IBattleBatchSimulationParallelService, BattleBatchSimulationParallelService>();
 
 
             var app = builder.Build();
