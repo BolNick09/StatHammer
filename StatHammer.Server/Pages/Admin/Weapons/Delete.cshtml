@@ -1,0 +1,30 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Weapons.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить оружие";
+}
+
+<h1>Удалить оружие</h1>
+
+<div class="card">
+    @if (Model.Weapon != null)
+    {
+        <p>
+            Вы действительно хотите удалить оружие
+            <strong>@Model.Weapon.Name</strong>?
+        </p>
+
+        <p class="error">
+            Внимание: если это оружие используется моделями или результатами симуляций,
+            удаление может быть запрещено ограничениями БД.
+        </p>
+
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button class="btn btn-danger" type="submit">Удалить</button>
+            <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Отмена</a>
+        </form>
+    }
+</div>

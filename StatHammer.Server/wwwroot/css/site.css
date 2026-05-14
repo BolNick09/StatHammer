@@ -135,3 +135,47 @@
     .data-table tbody tr:nth-child(even) {
         background: #f9fafb;
     }
+
+.btn-danger {
+    background: #dc2626;
+}
+
+.fieldset {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+}
+
+    .fieldset legend {
+        font-weight: bold;
+        padding: 0 0.5rem;
+    }
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+.nested-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+    .nested-table th,
+    .nested-table td {
+        padding: 0.35rem;
+        border: 1px solid #e5e7eb;
+    }
+
+    .nested-table th {
+        background: #f9fafb;
+    }
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
