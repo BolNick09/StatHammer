@@ -100,3 +100,8 @@
 .checkbox-row span {
     line-height: 1;
 }
+
+.success {
+    color: #047857;
+    font-weight: bold;
+}
