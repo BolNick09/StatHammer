@@ -16,6 +16,15 @@
             <a asp-page="/Simulations/Index">Симуляции</a>
             <a asp-page="/Admin/Index">Админка</a>
             <a href="/swagger">Swagger</a>
+            @if (User.Identity?.IsAuthenticated == true)
+            {
+                <span>@User.Identity.Name</span>
+                <a asp-page="/Account/Logout">Выйти</a>
+            }
+            else
+            {
+                <a asp-page="/Account/Login">Войти</a>
+            }
         </nav>
     </header>
 

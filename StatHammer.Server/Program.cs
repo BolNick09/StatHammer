@@ -4,6 +4,9 @@ using StatHammer.Server.Simulation.Services;
 using StatHammer.Server.Simulation.Dice.Services;
 using StatHammer.Server.Simulation.Combat.Services;
 using StatHammer.Server.Simulation.Battle.Services;
+using Microsoft.AspNetCore.Identity;
+using StatHammer.Server.Models.Entities;
+using StatHammer.Server.Data.Seed;
 
 
 
@@ -16,7 +19,41 @@ namespace StatHammer.Server
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
-            builder.Services.AddRazorPages();
+
+            builder.Services.AddRazorPages(options =>
+            {
+                options.Conventions.AuthorizeFolder("/Simulations");
+                options.Conventions.AuthorizeFolder("/Admin", "AdminOnly");
+            });
+
+            builder.Services.AddEndpointsApiExplorer();
+            builder.Services.AddSwaggerGen();
+
+            builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequiredLength = 6;
+                options.Password.RequireDigit = false;
+                options.Password.RequireLowercase = false;
+                options.Password.RequireUppercase = false;
+                options.Password.RequireNonAlphanumeric = false;
+
+                options.User.RequireUniqueEmail = true;
+            })
+            .AddEntityFrameworkStores<StatHammerDbContext>()
+            .AddDefaultTokenProviders();
+
+            builder.Services.ConfigureApplicationCookie(options =>
+            {
+                options.LoginPath = "/Account/Login";
+                options.LogoutPath = "/Account/Logout";
+                options.AccessDeniedPath = "/Account/AccessDenied";
+            });
+
+            builder.Services.AddAuthorization(options =>
+            {
+                options.AddPolicy("AdminOnly", policy =>
+                    policy.RequireRole("Admin"));
+            });
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -62,10 +99,19 @@ namespace StatHammer.Server
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
             app.MapRazorPages();
+
+
+            using (var scope = app.Services.CreateScope())
+            {
+                IdentitySeeder.SeedAsync(scope.ServiceProvider)
+                    .GetAwaiter()
+                    .GetResult();
+            }
 
             app.Run();
         }

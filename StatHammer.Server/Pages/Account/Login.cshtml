@@ -1,0 +1,42 @@
+﻿@page
+@model StatHammer.Server.Pages.Account.LoginModel
+
+@{
+    ViewData["Title"] = "Вход";
+}
+
+<h1>Вход</h1>
+
+<div class="card">
+    <form method="post">
+        <div class="form-row">
+            <label asp-for="Input.Email"></label>
+            <input asp-for="Input.Email" />
+            <span asp-validation-for="Input.Email"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Input.Password"></label>
+            <input asp-for="Input.Password" type="password" />
+            <span asp-validation-for="Input.Password"></span>
+        </div>
+
+        <div class="form-row checkbox-row">
+            <label asp-for="Input.RememberMe">
+                <input asp-for="Input.RememberMe" />
+                <span>Запомнить меня</span>
+            </label>
+        </div>
+
+        <button class="btn" type="submit">Войти</button>
+    </form>
+
+    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+    {
+        <p class="error">@Model.ErrorMessage</p>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
