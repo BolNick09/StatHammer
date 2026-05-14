@@ -1,0 +1,19 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.IndexModel
+
+@{
+    ViewData["Title"] = "Админка";
+}
+
+<h1>Админка</h1>
+
+<div class="card">
+    <h2>Справочники</h2>
+
+    <ul>
+        <li><a asp-page="/Admin/Weapons/Index">Оружие</a></li>
+        <li><a asp-page="/Admin/Models/Index">Модели</a></li>
+        <li><a asp-page="/Admin/Units/Index">Юниты</a></li>
+        <li><a asp-page="/Admin/SimulationResults/Index">Результаты симуляций</a></li>
+    </ul>
+</div>

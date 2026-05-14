@@ -16,6 +16,7 @@ namespace StatHammer.Server
             var builder = WebApplication.CreateBuilder(args);
 
             builder.Services.AddControllers();
+            builder.Services.AddRazorPages();
 
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -43,6 +44,8 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IBattleBatchSimulationParallelService, BattleBatchSimulationParallelService>();
             builder.Services.AddScoped<IBattleResultPersistenceService, BattleResultPersistenceService>();
 
+            
+
 
             var app = builder.Build();
 
@@ -50,11 +53,20 @@ namespace StatHammer.Server
             {
                 app.UseSwagger();
                 app.UseSwaggerUI();
+                
             }
 
             app.UseHttpsRedirection();
+
+            app.UseStaticFiles();
+
+            app.UseRouting();
+
             app.UseAuthorization();
+
             app.MapControllers();
+            app.MapRazorPages();
+
             app.Run();
         }
     }

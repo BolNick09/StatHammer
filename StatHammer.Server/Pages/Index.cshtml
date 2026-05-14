@@ -1,0 +1,23 @@
+﻿@page
+@model StatHammer.Server.Pages.IndexModel
+
+@{
+    ViewData["Title"] = "Главная";
+}
+
+<h1>StatHammer</h1>
+
+<div class="card">
+    <p>
+        Система статистического моделирования боевых сценариев Warhammer 40000.
+    </p>
+</div>
+
+<div class="card">
+    <h2>Основные разделы</h2>
+
+    <p>
+        <a class="btn" asp-page="/Simulations/Index">Запуск симуляций</a>
+        <a class="btn btn-secondary" asp-page="/Admin/Index">Админка</a>
+    </p>
+</div>
