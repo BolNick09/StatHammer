@@ -4,6 +4,7 @@ using StatHammer.Server.Simulation.Services;
 using StatHammer.Server.Simulation.Dice.Services;
 using StatHammer.Server.Simulation.Combat.Services;
 using StatHammer.Server.Simulation.Battle.Services;
+using StatHammer.Server.PageServices.Simulations;
 using Microsoft.AspNetCore.Identity;
 using StatHammer.Server.Models.Entities;
 using StatHammer.Server.Data.Seed;
@@ -81,7 +82,9 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IBattleBatchSimulationParallelService, BattleBatchSimulationParallelService>();
             builder.Services.AddScoped<IBattleResultPersistenceService, BattleResultPersistenceService>();
 
-            
+            builder.Services.AddScoped<ISimulationPageService, SimulationPageService>();
+
+
 
 
             var app = builder.Build();

@@ -8,5 +8,169 @@
 <h1>Симуляции</h1>
 
 <div class="card">
-    <p>Здесь будет форма запуска симуляции.</p>
+    <form method="post">
+        <div asp-validation-summary="All" class="error"></div>
+
+        <div class="form-row">
+            <label asp-for="Input.UnitAId"></label>
+            <select asp-for="Input.UnitAId" asp-items="Model.Units">
+                <option value="">-- выберите юнит A --</option>
+            </select>
+            <span asp-validation-for="Input.UnitAId"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Input.UnitBId"></label>
+            <select asp-for="Input.UnitBId" asp-items="Model.Units">
+                <option value="">-- выберите юнит B --</option>
+            </select>
+            <span asp-validation-for="Input.UnitBId"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Input.SimulationCount"></label>
+            <input asp-for="Input.SimulationCount" />
+            <span asp-validation-for="Input.SimulationCount"></span>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Input.MaxTurns"></label>
+            <input asp-for="Input.MaxTurns" />
+            <span asp-validation-for="Input.MaxTurns"></span>
+        </div>
+
+        <div class="form-row checkbox-row">
+            <label asp-for="Input.UseParallel">
+                <input asp-for="Input.UseParallel" />
+                <span>Использовать многопоточность</span>
+            </label>
+        </div>
+
+        <div class="form-row">
+            <label asp-for="Input.MaxDegreeOfParallelism"></label>
+            <input asp-for="Input.MaxDegreeOfParallelism" />
+            <span asp-validation-for="Input.MaxDegreeOfParallelism"></span>
+        </div>
+
+        <div class="form-row checkbox-row">
+            <label asp-for="Input.SaveResult">
+                <input asp-for="Input.SaveResult" />
+                <span>Сохранить результат в БД</span>
+            </label>
+        </div>
+
+        <button class="btn" type="submit">Запустить симуляцию</button>
+    </form>
 </div>
+
+@if (Model.RunResult?.Result != null)
+{
+    var result = Model.RunResult.Result;
+
+    <div class="card">
+        <h2>Результат</h2>
+
+        @if (Model.RunResult.WasSaved)
+        {
+            <p class="success">
+                Результат сохранён. Id: @Model.RunResult.SavedSimulationResultId
+            </p>
+        }
+
+        <table class="data-table">
+            <tbody>
+                <tr>
+                    <th>Юнит A</th>
+                    <td>@result.UnitAName</td>
+                </tr>
+                <tr>
+                    <th>Юнит B</th>
+                    <td>@result.UnitBName</td>
+                </tr>
+                <tr>
+                    <th>Симуляций</th>
+                    <td>@result.SimulationCount</td>
+                </tr>
+                <tr>
+                    <th>Побед A</th>
+                    <td>@result.UnitAWins</td>
+                </tr>
+                <tr>
+                    <th>Побед B</th>
+                    <td>@result.UnitBWins</td>
+                </tr>
+                <tr>
+                    <th>Ничьих</th>
+                    <td>@result.Draws</td>
+                </tr>
+                <tr>
+                    <th>Среднее число ходов</th>
+                    <td>@result.AverageCompletedTurns.ToString("0.#")</td>
+                </tr>
+                <tr>
+                    <th>Средний остаток моделей A</th>
+                    <td>@result.AverageUnitAFinalAliveModels.ToString("0.#")</td>
+                </tr>
+                <tr>
+                    <th>Средний остаток моделей B</th>
+                    <td>@result.AverageUnitBFinalAliveModels.ToString("0.#")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Средняя статистика по ходам</h2>
+
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Ход</th>
+                    <th>Сторона</th>
+                    <th>Атаки</th>
+                    <th>Попадания</th>
+                    <th>Пробития</th>
+                    <th>Успешные сейвы</th>
+                    <th>Урон</th>
+                    <th>Убито моделей</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var turn in result.Turns)
+                {
+                    if (turn.SideA != null)
+                    {
+                        <tr>
+                            <td>@turn.TurnNumber</td>
+                            <td>A</td>
+                            <td>@turn.SideA.AverageAttacks.ToString("0.#")</td>
+                            <td>@turn.SideA.AverageHits.ToString("0.#")</td>
+                            <td>@turn.SideA.AverageWounds.ToString("0.#")</td>
+                            <td>@turn.SideA.AverageSuccessfulSaves.ToString("0.#")</td>
+                            <td>@turn.SideA.AverageFinalDamage.ToString("0.#")</td>
+                            <td>@turn.SideA.AverageModelsKilled.ToString("0.#")</td>
+                        </tr>
+                    }
+
+                    if (turn.SideB != null)
+                    {
+                        <tr>
+                            <td>@turn.TurnNumber</td>
+                            <td>B</td>
+                            <td>@turn.SideB.AverageAttacks.ToString("0.#")</td>
+                            <td>@turn.SideB.AverageHits.ToString("0.#")</td>
+                            <td>@turn.SideB.AverageWounds.ToString("0.#")</td>
+                            <td>@turn.SideB.AverageSuccessfulSaves.ToString("0.#")</td>
+                            <td>@turn.SideB.AverageFinalDamage.ToString("0.#")</td>
+                            <td>@turn.SideB.AverageModelsKilled.ToString("0.#")</td>
+                        </tr>
+                    }
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
