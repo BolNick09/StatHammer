@@ -1,15 +1,17 @@
-﻿@page
-@model StatHammer.Server.Pages.Admin.Weapons.CreateModel
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Weapons.EditModel
 
 @{
-    ViewData["Title"] = "Добавить оружие";
+    ViewData["Title"] = "Редактировать оружие";
 }
 
-<h1>Добавить оружие</h1>
+<h1>Редактировать оружие</h1>
 
 <div class="card">
     <form method="post">
         <div asp-validation-summary="All" class="error"></div>
+
+        <input type="hidden" asp-for="Id" />
 
         <div class="form-row">
             <label asp-for="Input.Name"></label>
@@ -23,6 +25,8 @@
         {
             <fieldset class="fieldset">
                 <legend>Профиль @(i + 1)</legend>
+
+                <input type="hidden" asp-for="Input.Profiles[i].Id" />
 
                 <div class="form-grid">
                     <div class="form-row">
@@ -80,7 +84,7 @@
             </fieldset>
         }
 
-        <button class="btn" type="submit">Создать</button>
+        <button class="btn" type="submit">Сохранить</button>
         <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Отмена</a>
     </form>
 </div>

@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using StatHammer.Server.PageServices.Admin.Weapons;
 
 namespace StatHammer.Server.Pages.Admin.Weapons
@@ -23,21 +24,27 @@ namespace StatHammer.Server.Pages.Admin.Weapons
             }
         };
 
-        public void OnGet()
+        public List<SelectListItem> Abilities { get; set; } = new();
+
+        public async Task OnGetAsync(CancellationToken cancellationToken)
         {
+            Abilities = await _weaponService.GetAbilitySelectListAsync(cancellationToken);
         }
 
         public async Task<IActionResult> OnPostAsync(CancellationToken cancellationToken)
         {
+            Abilities = await _weaponService.GetAbilitySelectListAsync(cancellationToken);
+
             Input.Profiles = Input.Profiles
-                .Where(p =>
-                    !string.IsNullOrWhiteSpace(p.Name) ||
-                    !string.IsNullOrWhiteSpace(p.Attacks) ||
-                    !string.IsNullOrWhiteSpace(p.Damage) ||
-                    p.Range != 0 ||
-                    p.Strength != 4 ||
-                    p.ArmorPiercing != 0)
-                .ToList();
+            .Where(p =>
+                !string.IsNullOrWhiteSpace(p.Name) ||
+                !string.IsNullOrWhiteSpace(p.Attacks) ||
+                !string.IsNullOrWhiteSpace(p.Damage) ||
+                p.Range != 0 ||
+                p.Strength != 4 ||
+                p.ArmorPiercing != 0 ||
+                (p.AbilityIds?.Any() == true))
+            .ToList();
 
             if (!Input.Profiles.Any())
             {
@@ -49,7 +56,15 @@ namespace StatHammer.Server.Pages.Admin.Weapons
                 return Page();
             }
 
-            var weaponId = await _weaponService.CreateWeaponAsync(Input, cancellationToken);
+            try
+            {
+                await _weaponService.CreateWeaponAsync(Input, cancellationToken);
+            }
+            catch (InvalidOperationException ex)
+            {
+                ModelState.AddModelError(string.Empty, ex.Message);
+                return Page();
+            }
 
             return RedirectToPage("/Admin/Weapons/Index");
         }

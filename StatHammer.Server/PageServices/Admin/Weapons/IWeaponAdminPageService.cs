@@ -1,4 +1,6 @@
-﻿namespace StatHammer.Server.PageServices.Admin.Weapons
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
+
+namespace StatHammer.Server.PageServices.Admin.Weapons
 {
     public interface IWeaponAdminPageService
     {
@@ -9,12 +11,31 @@
             int id,
             CancellationToken cancellationToken = default);
 
+        Task<EditWeaponPageInput?> GetWeaponForEditAsync(
+            int id,
+            CancellationToken cancellationToken = default);
+
+        Task<List<SelectListItem>> GetAbilitySelectListAsync(
+            CancellationToken cancellationToken = default);
+
         Task<int> CreateWeaponAsync(
             CreateWeaponPageInput input,
             CancellationToken cancellationToken = default);
 
-        Task<bool> DeleteWeaponAsync(
+        Task<bool> UpdateWeaponAsync(
+            int id,
+            EditWeaponPageInput input,
+            CancellationToken cancellationToken = default);
+
+        Task<WeaponDeleteResult> DeleteWeaponAsync(
             int id,
             CancellationToken cancellationToken = default);
+    }
+
+    public class WeaponDeleteResult
+    {
+        public bool Success { get; set; }
+
+        public string? ErrorMessage { get; set; }
     }
 }

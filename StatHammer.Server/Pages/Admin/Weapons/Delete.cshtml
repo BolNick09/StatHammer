@@ -11,20 +11,29 @@
     @if (Model.Weapon != null)
     {
         <p>
-            Вы действительно хотите удалить оружие
-            <strong>@Model.Weapon.Name</strong>?
+            Оружие:
+            <strong>@Model.Weapon.Name</strong>
         </p>
 
-        <p class="error">
-            Внимание: если это оружие используется моделями или результатами симуляций,
-            удаление может быть запрещено ограничениями БД.
-        </p>
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <p class="error">@Model.ErrorMessage</p>
+        }
 
-        <form method="post">
-            <input type="hidden" asp-for="Id" />
+        @if (Model.Weapon.CanDelete)
+        {
+            <p>Вы действительно хотите удалить это оружие?</p>
 
-            <button class="btn btn-danger" type="submit">Удалить</button>
-            <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Отмена</a>
-        </form>
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button class="btn btn-danger" type="submit">Удалить</button>
+                <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Отмена</a>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Назад</a>
+        }
     }
 </div>

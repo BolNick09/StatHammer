@@ -17,5 +17,7 @@
         public int ArmorPiercing { get; set; }
 
         public string Damage { get; set; } = string.Empty;
+
+        public List<string> Abilities { get; set; } = new();
     }
 }

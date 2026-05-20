@@ -25,6 +25,8 @@
                     <th>Id</th>
                     <th>Название</th>
                     <th>Профили</th>
+                    <th>Используется моделями</th>
+                    <th>Сохранённые результаты</th>
                     <th>Действия</th>
                 </tr>
             </thead>
@@ -51,6 +53,7 @@
                                             <th>S</th>
                                             <th>AP</th>
                                             <th>D</th>
+                                            <th>Правила</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -64,6 +67,16 @@
                                                 <td>@profile.Strength</td>
                                                 <td>-@profile.ArmorPiercing</td>
                                                 <td>@profile.Damage</td>
+                                                <td>
+                                                    @if (profile.Abilities.Any())
+                                                    {
+                                                        @string.Join(", ", profile.Abilities)
+                                                    }
+                                                    else
+                                                    {
+                                                        <span class="muted">—</span>
+                                                    }
+                                                </td>
                                             </tr>
                                         }
                                     </tbody>
@@ -71,9 +84,36 @@
                             }
                         </td>
                         <td>
-                            <a class="btn btn-danger" asp-page="/Admin/Weapons/Delete" asp-route-id="@weapon.Id">
-                                Удалить
+                            @if (weapon.UsedByModels.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var modelName in weapon.UsedByModels)
+                                    {
+                                        <li>@modelName</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">Не используется</span>
+                            }
+                        </td>
+                        <td>@weapon.SimulationResultUsageCount</td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/Weapons/Edit" asp-route-id="@weapon.Id">
+                                Редактировать
                             </a>
+
+                            @if (weapon.CanDelete)
+                            {
+                                <a class="btn btn-danger" asp-page="/Admin/Weapons/Delete" asp-route-id="@weapon.Id">
+                                    Удалить
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="muted">Удаление запрещено</span>
+                            }
                         </td>
                     </tr>
                 }

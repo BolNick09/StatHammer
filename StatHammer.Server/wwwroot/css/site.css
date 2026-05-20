@@ -184,3 +184,18 @@
     color: #6b7280;
     font-size: 0.9rem;
 }
+
+.compact-list {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.multi-select {
+    width: 100%;
+    max-width: 420px;
+    min-height: 110px;
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+}

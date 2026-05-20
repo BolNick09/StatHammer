@@ -2,8 +2,10 @@
 
 namespace StatHammer.Server.PageServices.Admin.Weapons
 {
-    public class CreateWeaponProfilePageInput
+    public class EditWeaponProfilePageInput
     {
+        public int Id { get; set; }
+
         [Display(Name = "Название профиля")]
         public string? Name { get; set; }
 
