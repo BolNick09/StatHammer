@@ -1,0 +1,69 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Keywords.IndexModel
+
+@{
+    ViewData["Title"] = "Ключевые слова";
+}
+
+<h1>Ключевые слова</h1>
+
+<div class="card">
+    <a class="btn" asp-page="/Admin/Keywords/Create">Добавить ключевое слово</a>
+    <a class="btn btn-secondary" asp-page="/Admin/Index">Назад в админку</a>
+</div>
+
+<div class="card">
+    @if (!Model.Keywords.Any())
+    {
+        <p>Ключевые слова пока не добавлены.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Слово</th>
+                    <th>Используется юнитами</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var keyword in Model.Keywords)
+                {
+                    <tr>
+                        <td>@keyword.Id</td>
+                        <td>@keyword.Name</td>
+                        <td>
+                            @if (keyword.UsedByUnits.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var unitName in keyword.UsedByUnits)
+                                    {
+                                        <li>@unitName</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">Не используется</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/Keywords/Edit" asp-route-id="@keyword.Id">Редактировать</a>
+
+                            @if (keyword.CanDelete)
+                            {
+                                <a class="btn btn-danger" asp-page="/Admin/Keywords/Delete" asp-route-id="@keyword.Id">Удалить</a>
+                            }
+                            else
+                            {
+                                <span class="muted">Удаление запрещено</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

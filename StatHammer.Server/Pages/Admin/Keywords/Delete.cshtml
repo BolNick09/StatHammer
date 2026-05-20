@@ -1,0 +1,39 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Keywords.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить ключевое слово";
+}
+
+<h1>Удалить ключевое слово</h1>
+
+<div class="card">
+    @if (Model.Keyword != null)
+    {
+        <p>
+            Ключевое слово:
+            <strong>@Model.Keyword.Name</strong>
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <p class="error">@Model.ErrorMessage</p>
+        }
+
+        @if (Model.Keyword.CanDelete)
+        {
+            <p>Вы действительно хотите удалить это ключевое слово?</p>
+
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button class="btn btn-danger" type="submit">Удалить</button>
+                <a class="btn btn-secondary" asp-page="/Admin/Keywords/Index">Отмена</a>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-page="/Admin/Keywords/Index">Назад</a>
+        }
+    }
+</div>

@@ -1,0 +1,69 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Wargears.IndexModel
+
+@{
+    ViewData["Title"] = "Варгир";
+}
+
+<h1>Варгир</h1>
+
+<div class="card">
+    <a class="btn" asp-page="/Admin/Wargears/Create">Добавить варгир</a>
+    <a class="btn btn-secondary" asp-page="/Admin/Index">Назад в админку</a>
+</div>
+
+<div class="card">
+    @if (!Model.Wargears.Any())
+    {
+        <p>Варгир пока не добавлен.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Название</th>
+                    <th>Используется моделями</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var wargear in Model.Wargears)
+                {
+                    <tr>
+                        <td>@wargear.Id</td>
+                        <td>@wargear.Name</td>
+                        <td>
+                            @if (wargear.UsedByModels.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var modelName in wargear.UsedByModels)
+                                    {
+                                        <li>@modelName</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">Не используется</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/Wargears/Edit" asp-route-id="@wargear.Id">Редактировать</a>
+
+                            @if (wargear.CanDelete)
+                            {
+                                <a class="btn btn-danger" asp-page="/Admin/Wargears/Delete" asp-route-id="@wargear.Id">Удалить</a>
+                            }
+                            else
+                            {
+                                <span class="muted">Удаление запрещено</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

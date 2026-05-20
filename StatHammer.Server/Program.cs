@@ -11,6 +11,8 @@ using StatHammer.Server.Data.Seed;
 using StatHammer.Server.PageServices.Admin.Weapons;
 using StatHammer.Server.PageServices.Admin.Abilities;
 using StatHammer.Server.PageServices.Admin.Models;
+using StatHammer.Server.PageServices.Admin.Wargears;
+using StatHammer.Server.PageServices.Admin.Keywords;
 
 
 
@@ -90,6 +92,9 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IAbilityAdminPageService, AbilityAdminPageService>();
 
             builder.Services.AddScoped<IModelAdminPageService, ModelAdminPageService>();
+            builder.Services.AddScoped<IWargearAdminPageService, WargearAdminPageService>();
+
+            builder.Services.AddScoped<IKeywordAdminPageService, KeywordAdminPageService>();
 
 
 

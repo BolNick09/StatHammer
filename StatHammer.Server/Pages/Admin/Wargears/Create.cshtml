@@ -1,0 +1,27 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Wargears.CreateModel
+
+@{
+    ViewData["Title"] = "Добавить варгир";
+}
+
+<h1>Добавить варгир</h1>
+
+<div class="card">
+    <form method="post">
+        <div asp-validation-summary="All" class="error"></div>
+
+        <div class="form-row">
+            <label asp-for="Input.Name"></label>
+            <input asp-for="Input.Name" />
+            <span asp-validation-for="Input.Name"></span>
+        </div>
+
+        <button class="btn" type="submit">Создать</button>
+        <a class="btn btn-secondary" asp-page="/Admin/Wargears/Index">Отмена</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

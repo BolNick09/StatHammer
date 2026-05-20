@@ -1,0 +1,39 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Wargears.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить варгир";
+}
+
+<h1>Удалить варгир</h1>
+
+<div class="card">
+    @if (Model.Wargear != null)
+    {
+        <p>
+            Варгир:
+            <strong>@Model.Wargear.Name</strong>
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <p class="error">@Model.ErrorMessage</p>
+        }
+
+        @if (Model.Wargear.CanDelete)
+        {
+            <p>Вы действительно хотите удалить этот варгир?</p>
+
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button class="btn btn-danger" type="submit">Удалить</button>
+                <a class="btn btn-secondary" asp-page="/Admin/Wargears/Index">Отмена</a>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-page="/Admin/Wargears/Index">Назад</a>
+        }
+    }
+</div>
