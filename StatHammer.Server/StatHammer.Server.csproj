@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Pages\Admin\Users\" />
     <Folder Include="Services\" />
     <Folder Include="Simulation\Enums\" />
     <Folder Include="SQLite\" />

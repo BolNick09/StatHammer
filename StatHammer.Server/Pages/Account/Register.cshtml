@@ -1,14 +1,16 @@
 ﻿@page
-@model StatHammer.Server.Pages.Admin.Users.CreateModel
+@model StatHammer.Server.Pages.Account.RegisterModel
 
 @{
-    ViewData["Title"] = "Создать пользователя";
+    ViewData["Title"] = "Регистрация";
 }
 
-<h1>Создать пользователя</h1>
+<h1>Регистрация</h1>
 
 <div class="card">
     <form method="post">
+        <div asp-validation-summary="All" class="error"></div>
+
         <div class="form-row">
             <label asp-for="Input.Email"></label>
             <input asp-for="Input.Email" />
@@ -27,19 +29,9 @@
             <span asp-validation-for="Input.ConfirmPassword"></span>
         </div>
 
-        <button class="btn" type="submit">Создать</button>
-        <a class="btn btn-secondary" asp-page="/Admin/Index">Назад</a>
+        <button class="btn" type="submit">Зарегистрироваться</button>
+        <a class="btn btn-secondary" asp-page="/Account/Login">Уже есть аккаунт</a>
     </form>
-
-    @if (!string.IsNullOrWhiteSpace(Model.SuccessMessage))
-    {
-        <p class="success">@Model.SuccessMessage</p>
-    }
-
-    @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
-    {
-        <p class="error">@Model.ErrorMessage</p>
-    }
 </div>
 
 @section Scripts {

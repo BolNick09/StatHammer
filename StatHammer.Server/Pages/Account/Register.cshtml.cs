@@ -1,30 +1,29 @@
+using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using StatHammer.Server.Models.Entities;
-using System.ComponentModel.DataAnnotations;
 
-namespace StatHammer.Server.Pages.Admin.Users
+namespace StatHammer.Server.Pages.Account
 {
-    public class CreateModel : PageModel
+    public class RegisterModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly SignInManager<ApplicationUser> _signInManager;
         private readonly RoleManager<IdentityRole> _roleManager;
 
-        public CreateModel(
+        public RegisterModel(
             UserManager<ApplicationUser> userManager,
+            SignInManager<ApplicationUser> signInManager,
             RoleManager<IdentityRole> roleManager)
         {
             _userManager = userManager;
+            _signInManager = signInManager;
             _roleManager = roleManager;
         }
 
         [BindProperty]
-        public CreateUserInputModel Input { get; set; } = new();
-
-        public string? SuccessMessage { get; set; }
-
-        public string? ErrorMessage { get; set; }
+        public RegisterInputModel Input { get; set; } = new();
 
         public void OnGet()
         {
@@ -45,8 +44,11 @@ namespace StatHammer.Server.Pages.Admin.Users
 
                 if (!roleResult.Succeeded)
                 {
-                    ErrorMessage = "Не удалось создать роль User: " +
-                                   string.Join("; ", roleResult.Errors.Select(e => e.Description));
+                    foreach (var error in roleResult.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
+
                     return Page();
                 }
             }
@@ -55,7 +57,7 @@ namespace StatHammer.Server.Pages.Admin.Users
 
             if (existingUser != null)
             {
-                ErrorMessage = "Пользователь с таким email уже существует.";
+                ModelState.AddModelError(string.Empty, "Пользователь с таким email уже существует.");
                 return Page();
             }
 
@@ -70,28 +72,32 @@ namespace StatHammer.Server.Pages.Admin.Users
 
             if (!createResult.Succeeded)
             {
-                ErrorMessage = "Не удалось создать пользователя: " +
-                               string.Join("; ", createResult.Errors.Select(e => e.Description));
+                foreach (var error in createResult.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
                 return Page();
             }
 
-            var roleAssignResult = await _userManager.AddToRoleAsync(user, userRoleName);
+            var roleResultAssign = await _userManager.AddToRoleAsync(user, userRoleName);
 
-            if (!roleAssignResult.Succeeded)
+            if (!roleResultAssign.Succeeded)
             {
-                ErrorMessage = "Пользователь создан, но не удалось назначить роль User: " +
-                               string.Join("; ", roleAssignResult.Errors.Select(e => e.Description));
+                foreach (var error in roleResultAssign.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, error.Description);
+                }
+
                 return Page();
             }
 
-            SuccessMessage = $"Пользователь {Input.Email} создан с ролью User.";
-            ModelState.Clear();
-            Input = new CreateUserInputModel();
+            await _signInManager.SignInAsync(user, isPersistent: false);
 
-            return Page();
+            return RedirectToPage("/Simulations/Index");
         }
 
-        public class CreateUserInputModel
+        public class RegisterInputModel
         {
             [Required]
             [EmailAddress]
@@ -109,5 +115,4 @@ namespace StatHammer.Server.Pages.Admin.Users
             public string ConfirmPassword { get; set; } = string.Empty;
         }
     }
-
 }
