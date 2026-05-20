@@ -1,0 +1,39 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Units.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить юнит";
+}
+
+<h1>Удалить юнит</h1>
+
+<div class="card">
+    @if (Model.Unit != null)
+    {
+        <p>
+            Юнит:
+            <strong>@Model.Unit.Name</strong>
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <p class="error">@Model.ErrorMessage</p>
+        }
+
+        @if (Model.Unit.CanDelete)
+        {
+            <p>Вы действительно хотите удалить этот юнит?</p>
+
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button class="btn btn-danger" type="submit">Удалить</button>
+                <a class="btn btn-secondary" asp-page="/Admin/Units/Index">Отмена</a>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-page="/Admin/Units/Index">Назад</a>
+        }
+    }
+</div>

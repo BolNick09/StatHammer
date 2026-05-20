@@ -1,0 +1,23 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Units.EditModel
+
+@{
+    ViewData["Title"] = "Редактировать юнит";
+}
+
+<h1>Редактировать юнит</h1>
+
+<div class="card">
+    <form method="post">
+        <input type="hidden" asp-for="Id" />
+
+        <partial name="_UnitForm" model="Model.Input" />
+
+        <button class="btn" type="submit">Сохранить</button>
+        <a class="btn btn-secondary" asp-page="/Admin/Units/Index">Отмена</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

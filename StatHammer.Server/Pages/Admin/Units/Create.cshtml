@@ -1,0 +1,21 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Units.CreateModel
+
+@{
+    ViewData["Title"] = "Добавить юнит";
+}
+
+<h1>Добавить юнит</h1>
+
+<div class="card">
+    <form method="post">
+        <partial name="_UnitForm" model="Model.Input" />
+
+        <button class="btn" type="submit">Создать</button>
+        <a class="btn btn-secondary" asp-page="/Admin/Units/Index">Отмена</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

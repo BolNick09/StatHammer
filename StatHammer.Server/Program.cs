@@ -13,6 +13,7 @@ using StatHammer.Server.PageServices.Admin.Abilities;
 using StatHammer.Server.PageServices.Admin.Models;
 using StatHammer.Server.PageServices.Admin.Wargears;
 using StatHammer.Server.PageServices.Admin.Keywords;
+using StatHammer.Server.PageServices.Admin.Units;
 
 
 
@@ -95,6 +96,7 @@ namespace StatHammer.Server
             builder.Services.AddScoped<IWargearAdminPageService, WargearAdminPageService>();
 
             builder.Services.AddScoped<IKeywordAdminPageService, KeywordAdminPageService>();
+            builder.Services.AddScoped<IUnitAdminPageService, UnitAdminPageService>();
 
 
 

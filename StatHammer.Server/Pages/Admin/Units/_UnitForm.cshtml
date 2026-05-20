@@ -1,0 +1,60 @@
+﻿@using Microsoft.AspNetCore.Mvc.Rendering
+@using StatHammer.Server.PageServices.Admin.Units
+
+@model UnitPageInput
+
+@{
+    var modelOptions = ViewData["ModelOptions"] as List<SelectListItem> ?? new();
+    var keywordOptions = ViewData["KeywordOptions"] as List<SelectListItem> ?? new();
+}
+
+<div asp-validation-summary="All" class="error"></div>
+
+<div class="form-row">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+    <span asp-validation-for="Name"></span>
+</div>
+
+<h2>Состав юнита</h2>
+
+<p class="muted">
+    Заполни нужные строки. Пустые строки будут проигнорированы.
+</p>
+
+@for (int i = 0; i < Model.Models.Count; i++)
+{
+    <fieldset class="fieldset">
+        <legend>Строка состава @(i + 1)</legend>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <label asp-for="Models[i].ModelId"></label>
+                <select asp-for="Models[i].ModelId" asp-items="modelOptions">
+                    <option value="">-- не выбрано --</option>
+                </select>
+                <span asp-validation-for="Models[i].ModelId"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Models[i].MinCount"></label>
+                <input asp-for="Models[i].MinCount" />
+                <span asp-validation-for="Models[i].MinCount"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Models[i].MaxCount"></label>
+                <input asp-for="Models[i].MaxCount" />
+                <span asp-validation-for="Models[i].MaxCount"></span>
+            </div>
+        </div>
+    </fieldset>
+}
+
+<h2>Ключевые слова</h2>
+
+<div class="form-row">
+    <label asp-for="KeywordIds"></label>
+    <select asp-for="KeywordIds" asp-items="keywordOptions" multiple class="multi-select"></select>
+    <span asp-validation-for="KeywordIds"></span>
+</div>

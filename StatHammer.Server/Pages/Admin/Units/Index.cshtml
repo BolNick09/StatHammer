@@ -1,0 +1,104 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Units.IndexModel
+
+@{
+    ViewData["Title"] = "Юниты";
+}
+
+<h1>Юниты</h1>
+
+<div class="card">
+    <a class="btn" asp-page="/Admin/Units/Create">Добавить юнит</a>
+    <a class="btn btn-secondary" asp-page="/Admin/Index">Назад в админку</a>
+</div>
+
+<div class="card">
+    @if (!Model.Units.Any())
+    {
+        <p>Юниты пока не добавлены.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Название</th>
+                    <th>Состав</th>
+                    <th>Ключевые слова</th>
+                    <th>Сохранённые результаты</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var unit in Model.Units)
+                {
+                    <tr>
+                        <td>@unit.Id</td>
+                        <td>@unit.Name</td>
+                        <td>
+                            @if (unit.Models.Any())
+                            {
+                                <table class="nested-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Модель</th>
+                                            <th>Min</th>
+                                            <th>Max</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @foreach (var modelItem in unit.Models)
+                                        {
+                                            <tr>
+                                                <td>@modelItem.ModelName</td>
+                                                <td>@modelItem.MinCount</td>
+                                                <td>@modelItem.MaxCount</td>
+                                            </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            }
+                            else
+                            {
+                                <span class="muted">Состав не задан</span>
+                            }
+                        </td>
+                        <td>
+                            @if (unit.Keywords.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var keyword in unit.Keywords)
+                                    {
+                                        <li>@keyword</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">—</span>
+                            }
+                        </td>
+                        <td>@unit.SimulationResultUsageCount</td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/Units/Edit" asp-route-id="@unit.Id">
+                                Редактировать
+                            </a>
+
+                            @if (unit.CanDelete)
+                            {
+                                <a class="btn btn-danger" asp-page="/Admin/Units/Delete" asp-route-id="@unit.Id">
+                                    Удалить
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="muted">Удаление запрещено</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
