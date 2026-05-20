@@ -1,0 +1,115 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.Models.IndexModel
+
+@{
+    ViewData["Title"] = "Модели";
+}
+
+<h1>Модели</h1>
+
+<div class="card">
+    <a class="btn" asp-page="/Admin/Models/Create">Добавить модель</a>
+    <a class="btn btn-secondary" asp-page="/Admin/Index">Назад в админку</a>
+</div>
+
+<div class="card">
+    @if (!Model.Models.Any())
+    {
+        <p>Модели пока не добавлены.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Название</th>
+                    <th>Статлайн</th>
+                    <th>Оружие</th>
+                    <th>Варгир</th>
+                    <th>Используется в юнитах</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var modelItem in Model.Models)
+                {
+                    <tr>
+                        <td>@modelItem.Id</td>
+                        <td>@modelItem.Name</td>
+                        <td>
+                            M @modelItem.Move",
+                            T @modelItem.Toughness,
+                            Sv @modelItem.Save+,
+                            Inv @(modelItem.InvulnerableSave.HasValue ? $"{modelItem.InvulnerableSave}+" : "—"),
+                            W @modelItem.Wounds,
+                            Ld @modelItem.Leadership+,
+                            OC @modelItem.OC
+                        </td>
+                        <td>
+                            @if (modelItem.Weapons.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var weapon in modelItem.Weapons)
+                                    {
+                                        <li>@weapon.Name</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">—</span>
+                            }
+                        </td>
+                        <td>
+                            @if (modelItem.Wargears.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var wargear in modelItem.Wargears)
+                                    {
+                                        <li>@wargear.Name</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">—</span>
+                            }
+                        </td>
+                        <td>
+                            @if (modelItem.UsedByUnits.Any())
+                            {
+                                <ul class="compact-list">
+                                    @foreach (var unitName in modelItem.UsedByUnits)
+                                    {
+                                        <li>@unitName</li>
+                                    }
+                                </ul>
+                            }
+                            else
+                            {
+                                <span class="muted">Не используется</span>
+                            }
+                        </td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/Models/Edit" asp-route-id="@modelItem.Id">
+                                Редактировать
+                            </a>
+
+                            @if (modelItem.CanDelete)
+                            {
+                                <a class="btn btn-danger" asp-page="/Admin/Models/Delete" asp-route-id="@modelItem.Id">
+                                    Удалить
+                                </a>
+                            }
+                            else
+                            {
+                                <span class="muted">Удаление запрещено</span>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

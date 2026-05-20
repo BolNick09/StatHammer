@@ -1,0 +1,39 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Models.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить модель";
+}
+
+<h1>Удалить модель</h1>
+
+<div class="card">
+    @if (Model.GameModel != null)
+    {
+        <p>
+            Модель:
+            <strong>@Model.GameModel.Name</strong>
+        </p>
+
+        @if (!string.IsNullOrWhiteSpace(Model.ErrorMessage))
+        {
+            <p class="error">@Model.ErrorMessage</p>
+        }
+
+        @if (Model.GameModel.CanDelete)
+        {
+            <p>Вы действительно хотите удалить эту модель?</p>
+
+            <form method="post">
+                <input type="hidden" asp-for="Id" />
+
+                <button class="btn btn-danger" type="submit">Удалить</button>
+                <a class="btn btn-secondary" asp-page="/Admin/Models/Index">Отмена</a>
+            </form>
+        }
+        else
+        {
+            <a class="btn btn-secondary" asp-page="/Admin/Models/Index">Назад</a>
+        }
+    }
+</div>

@@ -10,6 +10,7 @@ using StatHammer.Server.Models.Entities;
 using StatHammer.Server.Data.Seed;
 using StatHammer.Server.PageServices.Admin.Weapons;
 using StatHammer.Server.PageServices.Admin.Abilities;
+using StatHammer.Server.PageServices.Admin.Models;
 
 
 
@@ -87,6 +88,8 @@ namespace StatHammer.Server
             builder.Services.AddScoped<ISimulationPageService, SimulationPageService>();
             builder.Services.AddScoped<IWeaponAdminPageService, WeaponAdminPageService>();
             builder.Services.AddScoped<IAbilityAdminPageService, AbilityAdminPageService>();
+
+            builder.Services.AddScoped<IModelAdminPageService, ModelAdminPageService>();
 
 
 

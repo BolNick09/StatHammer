@@ -1,0 +1,92 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.Models.EditModel
+
+@{
+    ViewData["Title"] = "Редактировать модель";
+}
+
+<h1>Редактировать модель</h1>
+
+<div class="card">
+    <form method="post">
+        <div asp-validation-summary="All" class="error"></div>
+
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-row">
+            <label asp-for="Input.Name"></label>
+            <input asp-for="Input.Name" />
+            <span asp-validation-for="Input.Name"></span>
+        </div>
+
+        <h2>Статлайн</h2>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <label asp-for="Input.Move"></label>
+                <input asp-for="Input.Move" />
+                <span asp-validation-for="Input.Move"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.Toughness"></label>
+                <input asp-for="Input.Toughness" />
+                <span asp-validation-for="Input.Toughness"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.Save"></label>
+                <input asp-for="Input.Save" />
+                <span asp-validation-for="Input.Save"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.InvulnerableSave"></label>
+                <input asp-for="Input.InvulnerableSave" />
+                <span asp-validation-for="Input.InvulnerableSave"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.Wounds"></label>
+                <input asp-for="Input.Wounds" />
+                <span asp-validation-for="Input.Wounds"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.Leadership"></label>
+                <input asp-for="Input.Leadership" />
+                <span asp-validation-for="Input.Leadership"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.OC"></label>
+                <input asp-for="Input.OC" />
+                <span asp-validation-for="Input.OC"></span>
+            </div>
+        </div>
+
+        <h2>Снаряжение</h2>
+
+        <div class="form-grid">
+            <div class="form-row">
+                <label asp-for="Input.WeaponIds"></label>
+                <select asp-for="Input.WeaponIds" asp-items="Model.Weapons" multiple class="multi-select"></select>
+                <span asp-validation-for="Input.WeaponIds"></span>
+            </div>
+
+            <div class="form-row">
+                <label asp-for="Input.WargearIds"></label>
+                <select asp-for="Input.WargearIds" asp-items="Model.Wargears" multiple class="multi-select"></select>
+                <span asp-validation-for="Input.WargearIds"></span>
+            </div>
+
+        </div>
+
+        <button class="btn" type="submit">Сохранить</button>
+        <a class="btn btn-secondary" asp-page="/Admin/Models/Index">Отмена</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
