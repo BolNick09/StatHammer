@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Identity;
 using StatHammer.Server.Models.Entities;
 using StatHammer.Server.Data.Seed;
 using StatHammer.Server.PageServices.Admin.Weapons;
+using StatHammer.Server.PageServices.Admin.Abilities;
 
 
 
@@ -85,6 +86,8 @@ namespace StatHammer.Server
 
             builder.Services.AddScoped<ISimulationPageService, SimulationPageService>();
             builder.Services.AddScoped<IWeaponAdminPageService, WeaponAdminPageService>();
+            builder.Services.AddScoped<IAbilityAdminPageService, AbilityAdminPageService>();
+
 
 
 
