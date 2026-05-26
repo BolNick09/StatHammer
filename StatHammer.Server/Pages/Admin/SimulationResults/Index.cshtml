@@ -1,0 +1,57 @@
+﻿@page
+@model StatHammer.Server.Pages.Admin.SimulationResults.IndexModel
+
+@{
+    ViewData["Title"] = "Результаты симуляций";
+}
+
+<h1>Результаты симуляций</h1>
+
+<div class="card">
+    <a class="btn btn-secondary" asp-page="/Admin/Index">Назад в админку</a>
+    <a class="btn" asp-page="/Simulations/Index">Запустить симуляцию</a>
+</div>
+
+<div class="card">
+    @if (!Model.Results.Any())
+    {
+        <p>Сохранённых результатов пока нет.</p>
+    }
+    else
+    {
+        <table class="data-table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Юнит A</th>
+                    <th>Юнит B</th>
+                    <th>Симуляций</th>
+                    <th>Дата</th>
+                    <th>Строк статистики</th>
+                    <th>Действия</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var result in Model.Results)
+                {
+                    <tr>
+                        <td>@result.Id</td>
+                        <td>@result.UnitAName</td>
+                        <td>@result.UnitBName</td>
+                        <td>@result.SimulationCount</td>
+                        <td>@result.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                        <td>@result.TurnStatsCount</td>
+                        <td>
+                            <a class="btn" asp-page="/Admin/SimulationResults/Details" asp-route-id="@result.Id">
+                                Детали
+                            </a>
+                            <a class="btn btn-danger" asp-page="/Admin/SimulationResults/Delete" asp-route-id="@result.Id">
+                                Удалить
+                            </a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>

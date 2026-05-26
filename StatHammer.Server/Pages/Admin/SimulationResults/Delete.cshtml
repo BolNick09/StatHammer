@@ -1,0 +1,46 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.SimulationResults.DeleteModel
+
+@{
+    ViewData["Title"] = "Удалить результат";
+}
+
+<h1>Удалить результат симуляции</h1>
+
+<div class="card">
+    @if (Model.ResultDetails != null)
+    {
+        <p>
+            Вы действительно хотите удалить результат
+            <strong>#@Model.ResultDetails.Id</strong>?
+        </p>
+
+        <table class="data-table">
+            <tbody>
+                <tr>
+                    <th>Юнит A</th>
+                    <td>@Model.ResultDetails.UnitAName</td>
+                </tr>
+                <tr>
+                    <th>Юнит B</th>
+                    <td>@Model.ResultDetails.UnitBName</td>
+                </tr>
+                <tr>
+                    <th>Количество симуляций</th>
+                    <td>@Model.ResultDetails.SimulationCount</td>
+                </tr>
+                <tr>
+                    <th>Дата UTC</th>
+                    <td>@Model.ResultDetails.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <form method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <button class="btn btn-danger" type="submit">Удалить</button>
+            <a class="btn btn-secondary" asp-page="/Admin/SimulationResults/Index">Отмена</a>
+        </form>
+    }
+</div>

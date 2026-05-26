@@ -1,0 +1,131 @@
+﻿@page "{id:int}"
+@model StatHammer.Server.Pages.Admin.SimulationResults.DetailsModel
+
+@{
+    ViewData["Title"] = "Детали результата";
+}
+
+@if (Model.ResultDetails != null)
+{
+    var result = Model.ResultDetails;
+
+    <h1>Детали результата #@result.Id</h1>
+
+    <div class="card">
+        <a class="btn btn-secondary" asp-page="/Admin/SimulationResults/Index">Назад к результатам</a>
+        <a class="btn btn-danger" asp-page="/Admin/SimulationResults/Delete" asp-route-id="@result.Id">Удалить</a>
+    </div>
+
+    <div class="card">
+        <h2>Общая информация</h2>
+
+        <table class="data-table">
+            <tbody>
+                <tr>
+                    <th>Id</th>
+                    <td>@result.Id</td>
+                </tr>
+                <tr>
+                    <th>Юнит A</th>
+                    <td>@result.UnitAName</td>
+                </tr>
+                <tr>
+                    <th>Юнит B</th>
+                    <td>@result.UnitBName</td>
+                </tr>
+                <tr>
+                    <th>Количество симуляций</th>
+                    <td>@result.SimulationCount</td>
+                </tr>
+                <tr>
+                    <th>Дата UTC</th>
+                    <td>@result.CreatedAtUtc.ToString("yyyy-MM-dd HH:mm:ss")</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div class="card">
+        <h2>Статистика по ходам</h2>
+
+        @if (!result.TurnStats.Any())
+        {
+            <p>Статистика по ходам отсутствует.</p>
+        }
+        else
+        {
+            <table class="data-table">
+                <thead>
+                    <tr>
+                        <th>Ход</th>
+                        <th>Сторона</th>
+                        <th>Среднее моделей живо</th>
+                        <th>Среднее ран</th>
+                        <th>Попадания</th>
+                        <th>Пробития</th>
+                        <th>Успешные сейвы</th>
+                        <th>FNP блок</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var turn in result.TurnStats)
+                    {
+                        <tr>
+                            <td>@turn.TurnNumber</td>
+                            <td>@turn.Side</td>
+                            <td>@turn.AvgModelsAlive.ToString("0.###")</td>
+                            <td>@turn.AvgWoundsAlive.ToString("0.###")</td>
+                            <td>@turn.AvgHits.ToString("0.###")</td>
+                            <td>@turn.AvgWounds.ToString("0.###")</td>
+                            <td>@turn.AvgSuccessfulSaves.ToString("0.###")</td>
+                            <td>@turn.AvgBlockedByFnp.ToString("0.###")</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+    </div>
+
+    <div class="card">
+        <h2>Статистика по оружию</h2>
+
+        @foreach (var turnGroup in result.TurnStats.GroupBy(t => t.TurnNumber).OrderBy(g => g.Key))
+        {
+            <h3>Ход @turnGroup.Key</h3>
+
+            @foreach (var sideStat in turnGroup.OrderBy(t => t.Side))
+            {
+                <h4>Сторона @sideStat.Side</h4>
+
+                @if (!sideStat.WeaponStats.Any())
+                {
+                    <p class="muted">Статистика оружия отсутствует.</p>
+                }
+                else
+                {
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Оружие</th>
+                                <th>Средние попадания</th>
+                                <th>Средние пробития</th>
+                                <th>Средний урон</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var weapon in sideStat.WeaponStats)
+                            {
+                                <tr>
+                                    <td>@weapon.WeaponName</td>
+                                    <td>@weapon.AvgHits.ToString("0.###")</td>
+                                    <td>@weapon.AvgWounds.ToString("0.###")</td>
+                                    <td>@weapon.AvgDamage.ToString("0.###")</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+            }
+        }
+    </div>
+}

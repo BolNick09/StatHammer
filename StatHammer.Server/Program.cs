@@ -14,6 +14,7 @@ using StatHammer.Server.PageServices.Admin.Models;
 using StatHammer.Server.PageServices.Admin.Wargears;
 using StatHammer.Server.PageServices.Admin.Keywords;
 using StatHammer.Server.PageServices.Admin.Units;
+using StatHammer.Server.PageServices.Admin.SimulationResults;
 
 
 
@@ -97,6 +98,8 @@ namespace StatHammer.Server
 
             builder.Services.AddScoped<IKeywordAdminPageService, KeywordAdminPageService>();
             builder.Services.AddScoped<IUnitAdminPageService, UnitAdminPageService>();
+
+            builder.Services.AddScoped<ISimulationResultAdminPageService, SimulationResultAdminPageService>();
 
 
 
