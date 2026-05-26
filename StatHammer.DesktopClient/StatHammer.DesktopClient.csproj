@@ -8,4 +8,14 @@
     <UseWPF>true</UseWPF>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Net.Http.Json" Version="9.0.15" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="ViewModels\" />
+    <Folder Include="Commands\" />
+    <Folder Include="Views\" />
+  </ItemGroup>
+
 </Project>
