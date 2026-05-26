@@ -15,6 +15,9 @@ using StatHammer.Server.PageServices.Admin.Wargears;
 using StatHammer.Server.PageServices.Admin.Keywords;
 using StatHammer.Server.PageServices.Admin.Units;
 using StatHammer.Server.PageServices.Admin.SimulationResults;
+using System.Text;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
 
 
 
@@ -35,7 +38,35 @@ namespace StatHammer.Server
             });
 
             builder.Services.AddEndpointsApiExplorer();
-            builder.Services.AddSwaggerGen();
+            builder.Services.AddSwaggerGen(options =>
+            {
+                options.CustomSchemaIds(type => type.FullName?.Replace("+", "."));
+
+                options.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+                {
+                    Name = "Authorization",
+                    Type = Microsoft.OpenApi.Models.SecuritySchemeType.Http,
+                    Scheme = "bearer",
+                    BearerFormat = "JWT",
+                    In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                    Description = "Введите JWT токен. Пример: Bearer eyJhbGciOi..."
+                });
+
+                options.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            Array.Empty<string>()
+        }
+    });
+            });
 
             builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
@@ -49,6 +80,41 @@ namespace StatHammer.Server
             })
             .AddEntityFrameworkStores<StatHammerDbContext>()
             .AddDefaultTokenProviders();
+
+            var jwtIssuer = builder.Configuration["Jwt:Issuer"];
+            var jwtAudience = builder.Configuration["Jwt:Audience"];
+            var jwtKey = builder.Configuration["Jwt:Key"];
+
+            if (string.IsNullOrWhiteSpace(jwtIssuer) ||
+                string.IsNullOrWhiteSpace(jwtAudience) ||
+                string.IsNullOrWhiteSpace(jwtKey))
+            {
+                throw new InvalidOperationException("JWT settings are not configured.");
+            }
+
+            builder.Services
+                .AddAuthentication(options =>
+                {
+                    options.DefaultScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
+                    options.DefaultChallengeScheme = Microsoft.AspNetCore.Identity.IdentityConstants.ApplicationScheme;
+                })
+                .AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidIssuer = jwtIssuer,
+
+                        ValidateAudience = true,
+                        ValidAudience = jwtAudience,
+
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtKey)),
+
+                        ValidateLifetime = true,
+                        ClockSkew = TimeSpan.FromMinutes(2)
+                    };
+                });
 
             builder.Services.ConfigureApplicationCookie(options =>
             {
