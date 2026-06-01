@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using StatHammer.DesktopClient.Services;
+using StatHammer.DesktopClient.Views;
 
 namespace StatHammer.DesktopClient
 {
@@ -21,6 +22,15 @@ namespace StatHammer.DesktopClient
             AuthService = new AuthService(ApiClient);
             UnitService = new UnitService(ApiClient);
             SimulationService = new SimulationService(ApiClient);
+
+            var loginWindow = new LoginWindow(
+                AuthService,
+                UnitService,
+                SimulationService);
+
+            MainWindow = loginWindow;
+
+            loginWindow.Show();
         }
     }
 }
