@@ -258,15 +258,15 @@
                                 <DataGridTextColumn Header="Профиль"
                                                     Binding="{Binding ProfileName}" />
                                 <DataGridTextColumn Header="Среднее количество"
-                                                    Binding="{Binding AverageCount, StringFormat={}{0:0.###}}" />
+                                                    Binding="{Binding AverageCount, StringFormat={}{0:0.#}}" />
                                 <DataGridTextColumn Header="Атаки"
-                                                    Binding="{Binding AverageAttacks, StringFormat={}{0:0.###}}" />
+                                                    Binding="{Binding AverageAttacks, StringFormat={}{0:0.#}}" />
                                 <DataGridTextColumn Header="Попадания"
-                                                    Binding="{Binding AverageHits, StringFormat={}{0:0.###}}" />
+                                                    Binding="{Binding AverageHits, StringFormat={}{0:0.#}}" />
                                 <DataGridTextColumn Header="Пробития"
-                                                    Binding="{Binding AverageWounds, StringFormat={}{0:0.###}}" />
+                                                    Binding="{Binding AverageWounds, StringFormat={}{0:0.#}}" />
                                 <DataGridTextColumn Header="Урон"
-                                                    Binding="{Binding AverageFinalDamage, StringFormat={}{0:0.###}}" />
+                                                    Binding="{Binding AverageFinalDamage, StringFormat={}{0:0.#}}" />
                             </DataGrid.Columns>
                         </DataGrid>
                     </TabItem>
