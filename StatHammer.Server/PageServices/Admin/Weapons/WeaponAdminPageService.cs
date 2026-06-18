@@ -106,10 +106,14 @@ namespace StatHammer.Server.PageServices.Admin.Weapons
             CreateWeaponPageInput input,
             CancellationToken cancellationToken = default)
         {
+            var profilesToCreate = input.HasSecondProfile
+                ? input.Profiles.Take(2).ToList()
+                : input.Profiles.Take(1).ToList();
+
             var weapon = new Weapon
             {
                 Name = input.Name.Trim(),
-                WeaponProfiles = input.Profiles
+                WeaponProfiles = profilesToCreate
                     .Where(IsCreateProfileFilled)
                     .Select(p => new WeaponProfile
                     {
@@ -121,12 +125,12 @@ namespace StatHammer.Server.PageServices.Admin.Weapons
                         ArmorPiercing = p.ArmorPiercing,
                         Damage = p.Damage.Trim(),
                         WeaponProfileAbilities = (p.AbilityIds ?? new List<int>())
-                        .Distinct()
-                        .Select(id => new WeaponProfileAbility
-                        {
-                            AbilityId = id
-                        })
-                        .ToList()
+                            .Distinct()
+                            .Select(id => new WeaponProfileAbility
+                            {
+                                AbilityId = id
+                            })
+                            .ToList()
                     })
                     .ToList()
             };

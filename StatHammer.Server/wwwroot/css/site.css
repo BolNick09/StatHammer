@@ -199,3 +199,38 @@
     border-radius: 6px;
     background: white;
 }
+
+.weapon-name-row {
+    max-width: 420px;
+}
+
+.weapon-profile-fieldset {
+    margin-bottom: 18px;
+}
+
+.weapon-profile-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    column-gap: 22px;
+    row-gap: 16px;
+    align-items: start;
+}
+
+    .weapon-profile-grid .form-row {
+        min-width: 0;
+    }
+
+        .weapon-profile-grid .form-row input,
+        .weapon-profile-grid .form-row select {
+            width: 100%;
+            max-width: 100%;
+            box-sizing: border-box;
+        }
+
+    .weapon-profile-grid .multi-select {
+        min-height: 96px;
+    }
+
+.second-profile-toggle {
+    margin: 8px 0 14px 0;
+}

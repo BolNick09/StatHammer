@@ -15,19 +15,13 @@ namespace StatHammer.Server.Pages.Admin.Weapons
         }
 
         [BindProperty]
-        public CreateWeaponPageInput Input { get; set; } = new()
-        {
-            Profiles = new List<CreateWeaponProfilePageInput>
-            {
-                new CreateWeaponProfilePageInput(),
-                new CreateWeaponProfilePageInput()
-            }
-        };
+        public CreateWeaponPageInput Input { get; set; } = CreateDefaultInput();
 
         public List<SelectListItem> Abilities { get; set; } = new();
 
         public async Task OnGetAsync(CancellationToken cancellationToken)
         {
+            EnsureTwoProfiles();
             Abilities = await _weaponService.GetAbilitySelectListAsync(cancellationToken);
         }
 
@@ -35,16 +29,16 @@ namespace StatHammer.Server.Pages.Admin.Weapons
         {
             Abilities = await _weaponService.GetAbilitySelectListAsync(cancellationToken);
 
-            Input.Profiles = Input.Profiles
-            .Where(p =>
-                !string.IsNullOrWhiteSpace(p.Name) ||
-                !string.IsNullOrWhiteSpace(p.Attacks) ||
-                !string.IsNullOrWhiteSpace(p.Damage) ||
-                p.Range != 0 ||
-                p.Strength != 4 ||
-                p.ArmorPiercing != 0 ||
-                (p.AbilityIds?.Any() == true))
-            .ToList();
+            EnsureTwoProfiles();
+
+            if (!Input.HasSecondProfile)
+            {
+                RemoveSecondProfileModelState();
+            }
+
+            Input.Profiles = Input.HasSecondProfile
+                ? Input.Profiles.Take(2).ToList()
+                : Input.Profiles.Take(1).ToList();
 
             if (!Input.Profiles.Any())
             {
@@ -53,6 +47,7 @@ namespace StatHammer.Server.Pages.Admin.Weapons
 
             if (!ModelState.IsValid)
             {
+                EnsureTwoProfiles();
                 return Page();
             }
 
@@ -63,10 +58,43 @@ namespace StatHammer.Server.Pages.Admin.Weapons
             catch (InvalidOperationException ex)
             {
                 ModelState.AddModelError(string.Empty, ex.Message);
+                EnsureTwoProfiles();
                 return Page();
             }
 
             return RedirectToPage("/Admin/Weapons/Index");
+        }
+
+        private static CreateWeaponPageInput CreateDefaultInput()
+        {
+            return new CreateWeaponPageInput
+            {
+                Profiles = new List<CreateWeaponProfilePageInput>
+                {
+                    new CreateWeaponProfilePageInput(),
+                    new CreateWeaponProfilePageInput()
+                }
+            };
+        }
+
+        private void EnsureTwoProfiles()
+        {
+            Input.Profiles ??= new List<CreateWeaponProfilePageInput>();
+
+            while (Input.Profiles.Count < 2)
+            {
+                Input.Profiles.Add(new CreateWeaponProfilePageInput());
+            }
+        }
+
+        private void RemoveSecondProfileModelState()
+        {
+            foreach (var key in ModelState.Keys
+                .Where(key => key.StartsWith("Input.Profiles[1]."))
+                .ToList())
+            {
+                ModelState.Remove(key);
+            }
         }
     }
 }

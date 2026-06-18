@@ -11,7 +11,7 @@
     <form method="post">
         <div asp-validation-summary="All" class="error"></div>
 
-        <div class="form-row">
+        <div class="form-row weapon-name-row">
             <label asp-for="Input.Name"></label>
             <input asp-for="Input.Name" />
             <span asp-validation-for="Input.Name"></span>
@@ -19,66 +19,126 @@
 
         <h2>Профили оружия</h2>
 
-        @for (int i = 0; i < Model.Input.Profiles.Count; i++)
-        {
-            <fieldset class="fieldset">
-                <legend>Профиль @(i + 1)</legend>
+        <fieldset class="fieldset weapon-profile-fieldset">
+            <legend>Профиль 1</legend>
 
-                <div class="form-grid">
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Name"></label>
-                        <input asp-for="Input.Profiles[i].Name" />
-                        <span asp-validation-for="Input.Profiles[i].Name"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Range"></label>
-                        <input asp-for="Input.Profiles[i].Range" />
-                        <span asp-validation-for="Input.Profiles[i].Range"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Attacks"></label>
-                        <input asp-for="Input.Profiles[i].Attacks" />
-                        <span asp-validation-for="Input.Profiles[i].Attacks"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Skill"></label>
-                        <input asp-for="Input.Profiles[i].Skill" />
-                        <span asp-validation-for="Input.Profiles[i].Skill"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Strength"></label>
-                        <input asp-for="Input.Profiles[i].Strength" />
-                        <span asp-validation-for="Input.Profiles[i].Strength"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].ArmorPiercing"></label>
-                        <input asp-for="Input.Profiles[i].ArmorPiercing" />
-                        <span asp-validation-for="Input.Profiles[i].ArmorPiercing"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].Damage"></label>
-                        <input asp-for="Input.Profiles[i].Damage" />
-                        <span asp-validation-for="Input.Profiles[i].Damage"></span>
-                    </div>
-
-                    <div class="form-row">
-                        <label asp-for="Input.Profiles[i].AbilityIds"></label>
-                        <select asp-for="Input.Profiles[i].AbilityIds"
-                                asp-items="Model.Abilities"
-                                multiple
-                                class="multi-select">
-                        </select>
-                        <span asp-validation-for="Input.Profiles[i].AbilityIds"></span>
-                    </div>
+            <div class="weapon-profile-grid">
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Name"></label>
+                    <input asp-for="Input.Profiles[0].Name" />
+                    <span asp-validation-for="Input.Profiles[0].Name"></span>
                 </div>
-            </fieldset>
-        }
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Range"></label>
+                    <input asp-for="Input.Profiles[0].Range" />
+                    <span asp-validation-for="Input.Profiles[0].Range"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Attacks"></label>
+                    <input asp-for="Input.Profiles[0].Attacks" />
+                    <span asp-validation-for="Input.Profiles[0].Attacks"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Skill"></label>
+                    <input asp-for="Input.Profiles[0].Skill" />
+                    <span asp-validation-for="Input.Profiles[0].Skill"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Strength"></label>
+                    <input asp-for="Input.Profiles[0].Strength" />
+                    <span asp-validation-for="Input.Profiles[0].Strength"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].ArmorPiercing"></label>
+                    <input asp-for="Input.Profiles[0].ArmorPiercing" />
+                    <span asp-validation-for="Input.Profiles[0].ArmorPiercing"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].Damage"></label>
+                    <input asp-for="Input.Profiles[0].Damage" />
+                    <span asp-validation-for="Input.Profiles[0].Damage"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[0].AbilityIds"></label>
+                    <select asp-for="Input.Profiles[0].AbilityIds"
+                            asp-items="Model.Abilities"
+                            multiple
+                            class="multi-select">
+                    </select>
+                    <span asp-validation-for="Input.Profiles[0].AbilityIds"></span>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="checkbox-row second-profile-toggle">
+            <input asp-for="Input.HasSecondProfile" id="hasSecondProfile" />
+            <label asp-for="Input.HasSecondProfile">Добавить второй профиль оружия</label>
+        </div>
+
+        <fieldset class="fieldset weapon-profile-fieldset" id="secondProfileBlock">
+            <legend>Профиль 2</legend>
+
+            <div class="weapon-profile-grid">
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Name"></label>
+                    <input asp-for="Input.Profiles[1].Name" />
+                    <span asp-validation-for="Input.Profiles[1].Name"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Range"></label>
+                    <input asp-for="Input.Profiles[1].Range" />
+                    <span asp-validation-for="Input.Profiles[1].Range"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Attacks"></label>
+                    <input asp-for="Input.Profiles[1].Attacks" />
+                    <span asp-validation-for="Input.Profiles[1].Attacks"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Skill"></label>
+                    <input asp-for="Input.Profiles[1].Skill" />
+                    <span asp-validation-for="Input.Profiles[1].Skill"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Strength"></label>
+                    <input asp-for="Input.Profiles[1].Strength" />
+                    <span asp-validation-for="Input.Profiles[1].Strength"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].ArmorPiercing"></label>
+                    <input asp-for="Input.Profiles[1].ArmorPiercing" />
+                    <span asp-validation-for="Input.Profiles[1].ArmorPiercing"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].Damage"></label>
+                    <input asp-for="Input.Profiles[1].Damage" />
+                    <span asp-validation-for="Input.Profiles[1].Damage"></span>
+                </div>
+
+                <div class="form-row">
+                    <label asp-for="Input.Profiles[1].AbilityIds"></label>
+                    <select asp-for="Input.Profiles[1].AbilityIds"
+                            asp-items="Model.Abilities"
+                            multiple
+                            class="multi-select">
+                    </select>
+                    <span asp-validation-for="Input.Profiles[1].AbilityIds"></span>
+                </div>
+            </div>
+        </fieldset>
 
         <button class="btn" type="submit">Создать</button>
         <a class="btn btn-secondary" asp-page="/Admin/Weapons/Index">Отмена</a>
@@ -87,4 +147,27 @@
 
 @section Scripts {
     <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        function updateSecondProfileVisibility() {
+            const checkbox = document.getElementById('hasSecondProfile');
+            const block = document.getElementById('secondProfileBlock');
+
+            if (!checkbox || !block) {
+                return;
+            }
+
+            block.style.display = checkbox.checked ? 'block' : 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const checkbox = document.getElementById('hasSecondProfile');
+
+            if (checkbox) {
+                checkbox.addEventListener('change', updateSecondProfileVisibility);
+            }
+
+            updateSecondProfileVisibility();
+        });
+    </script>
 }
