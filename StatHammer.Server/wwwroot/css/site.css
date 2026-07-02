@@ -5,6 +5,8 @@
     color: #111827;
 }
 
+/* Layout */
+
 .top-bar {
     display: flex;
     justify-content: space-between;
@@ -14,16 +16,16 @@
     color: white;
 }
 
-.brand a,
-.nav a {
-    color: white;
-    text-decoration: none;
-}
-
 .brand {
     font-weight: bold;
     font-size: 1.25rem;
 }
+
+    .brand a,
+    .nav a {
+        color: white;
+        text-decoration: none;
+    }
 
 .nav {
     display: flex;
@@ -31,19 +33,37 @@
 }
 
 .container {
-    max-width: 1200px;
+    max-width: 1280px;
     margin: 2rem auto;
     padding: 1rem;
     background: white;
     border-radius: 8px;
 }
 
+/* Cards */
+
 .card {
     padding: 1rem;
     border: 1px solid #e5e7eb;
     border-radius: 8px;
     margin-bottom: 1rem;
+    background: #ffffff;
 }
+
+.fieldset {
+    border: 1px solid #d1d5db;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background: #ffffff;
+}
+
+    .fieldset legend {
+        font-weight: bold;
+        padding: 0 0.5rem;
+    }
+
+/* Buttons */
 
 .btn {
     display: inline-block;
@@ -54,11 +74,44 @@
     text-decoration: none;
     border: none;
     cursor: pointer;
+    font-weight: 600;
 }
+
+    .btn:hover {
+        filter: brightness(0.95);
+    }
 
 .btn-secondary {
     background: #4b5563;
 }
+
+.btn-danger {
+    background: #dc2626;
+}
+
+/* Text helpers */
+
+.error {
+    color: #b91c1c;
+    font-weight: bold;
+}
+
+.success {
+    color: #047857;
+    font-weight: bold;
+}
+
+.muted {
+    color: #6b7280;
+    font-size: 0.9rem;
+}
+
+.compact-list {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+/* Forms */
 
 .form-row {
     margin-bottom: 1rem;
@@ -70,17 +123,27 @@
         font-weight: bold;
     }
 
-    .form-row input {
+    .form-row input,
+    .form-row select,
+    .multi-select {
         width: 100%;
-        max-width: 400px;
+        max-width: 420px;
         padding: 0.5rem;
         border: 1px solid #d1d5db;
         border-radius: 6px;
+        background: white;
+        box-sizing: border-box;
     }
 
-.error {
-    color: #b91c1c;
-    font-weight: bold;
+        .form-row input:focus,
+        .form-row select:focus,
+        .multi-select:focus {
+            outline: 2px solid #93c5fd;
+            border-color: #2563eb;
+        }
+
+.multi-select {
+    min-height: 110px;
 }
 
 .checkbox-row label {
@@ -101,19 +164,39 @@
     line-height: 1;
 }
 
-.success {
-    color: #047857;
-    font-weight: bold;
+/* Compact numeric inputs */
+
+input[type="number"],
+.form-row input[type="number"] {
+    width: 6.5rem;
+    max-width: 6.5rem;
+    text-align: center;
 }
 
-.form-row select {
-    width: 100%;
-    max-width: 420px;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: white;
+.small-number-input,
+input.small-number-input {
+    width: 4.5rem;
+    max-width: 4.5rem;
+    padding: 0.35rem 0.4rem;
+    text-align: center;
+    box-sizing: border-box;
 }
+
+/* Generic grids */
+
+.form-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(160px, 1fr));
+    gap: 1rem;
+}
+
+@media (max-width: 900px) {
+    .form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* Generic tables */
 
 .data-table {
     width: 100%;
@@ -136,28 +219,6 @@
         background: #f9fafb;
     }
 
-.btn-danger {
-    background: #dc2626;
-}
-
-.fieldset {
-    border: 1px solid #d1d5db;
-    border-radius: 8px;
-    padding: 1rem;
-    margin-bottom: 1rem;
-}
-
-    .fieldset legend {
-        font-weight: bold;
-        padding: 0 0.5rem;
-    }
-
-.form-grid {
-    display: grid;
-    grid-template-columns: repeat(4, minmax(160px, 1fr));
-    gap: 1rem;
-}
-
 .nested-table {
     width: 100%;
     border-collapse: collapse;
@@ -174,31 +235,7 @@
         background: #f9fafb;
     }
 
-@media (max-width: 900px) {
-    .form-grid {
-        grid-template-columns: 1fr;
-    }
-}
-
-.muted {
-    color: #6b7280;
-    font-size: 0.9rem;
-}
-
-.compact-list {
-    margin: 0;
-    padding-left: 1.2rem;
-}
-
-.multi-select {
-    width: 100%;
-    max-width: 420px;
-    min-height: 110px;
-    padding: 0.5rem;
-    border: 1px solid #d1d5db;
-    border-radius: 6px;
-    background: white;
-}
+/* Weapon create/edit page */
 
 .weapon-name-row {
     max-width: 420px;
@@ -227,6 +264,11 @@
             box-sizing: border-box;
         }
 
+            .weapon-profile-grid .form-row input[type="number"] {
+                width: 100%;
+                max-width: 100%;
+            }
+
     .weapon-profile-grid .multi-select {
         min-height: 96px;
     }
@@ -235,6 +277,7 @@
     margin: 8px 0 14px 0;
 }
 
+/* Simulation page */
 
 .simulation-modifiers-grid {
     display: grid;
@@ -248,8 +291,9 @@
         grid-template-columns: repeat(4, minmax(0, 1fr));
     }
 
-    .simulation-modifiers-grid input {
-        max-width: 100%;
+    .simulation-modifiers-grid .form-row input[type="number"] {
+        width: 4.5rem;
+        max-width: 4.5rem;
     }
 
 @media (max-width: 900px) {
@@ -262,6 +306,8 @@
         }
 }
 
+/* Loadout layout */
+
 .simulation-loadout-grid {
     display: grid;
     grid-template-columns: 1fr;
@@ -273,94 +319,141 @@
     .simulation-loadout-grid .fieldset {
         width: 100%;
         box-sizing: border-box;
+        background: #f8fafc;
     }
 
-.loadout-table {
-    width: 100%;
-}
-
-.small-number-input {
-    width: 80px;
-    max-width: 100%;
-    box-sizing: border-box;
-}
-
-@media (max-width: 900px) {
-    .simulation-loadout-grid {
-        grid-template-columns: 1fr;
-    }
-}
+/* Loadout model table */
 
 .loadout-table {
     width: 100%;
     border-collapse: collapse;
+    margin-top: 0.75rem;
+    background: #ffffff;
+    border: 1px solid #cbd5e1;
 }
 
+    .loadout-table th,
+    .loadout-table td {
+        border: 1px solid #dbe3ec;
+        padding: 0.45rem 0.5rem;
+        vertical-align: middle;
+    }
+
     .loadout-table th {
+        background: #e5e7eb;
+        color: #111827;
         text-align: center;
         white-space: nowrap;
+        font-weight: 700;
     }
 
     .loadout-table td {
         text-align: center;
-        vertical-align: middle;
     }
 
     .loadout-table .model-name-cell {
         text-align: left;
-        font-weight: 600;
-        min-width: 220px;
+        font-weight: 700;
+        min-width: 260px;
     }
 
 .model-stat-row {
-    background: #f8fafc;
+    background: #eef2f7;
 }
 
-    .model-stat-row:nth-child(4n + 1) {
-        background: #eef2f7;
+    .model-stat-row td {
+        font-size: 0.95rem;
     }
 
+/* Weapon block inside loadout */
+
 .weapon-row td {
-    padding: 0 8px 12px 8px;
+    padding: 0 8px 14px 8px;
     background: #ffffff;
 }
 
 .weapon-profile-table {
     width: 100%;
-    margin-top: 6px;
+    margin-top: 0.55rem;
     border-collapse: collapse;
-    font-size: 13px;
+    font-size: 0.86rem;
     border: 1px solid #cbd5e1;
     table-layout: auto;
 }
 
+    .weapon-profile-table th,
+    .weapon-profile-table td {
+        border: 1px solid #d7dee8;
+        padding: 0.38rem 0.45rem;
+    }
+
     .weapon-profile-table th {
         background: #2f4a38;
         color: #ffffff;
-        padding: 6px 8px;
         text-align: center;
         white-space: nowrap;
+        font-weight: 700;
     }
 
     .weapon-profile-table td {
-        padding: 6px 8px;
-        border-bottom: 1px solid #d9e2ec;
         text-align: center;
+        background: #ffffff;
     }
 
+    .weapon-profile-table tbody tr:nth-child(even) td {
+        background: #f4f7f5;
+    }
+
+    .weapon-profile-table td:first-child {
+        min-width: 240px;
+    }
+
+    .weapon-profile-table td:first-child,
+    .weapon-profile-table td:nth-child(2),
+    .weapon-profile-table td:last-child {
+        text-align: left;
+    }
+
+ 
+
+.stat-chip {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.25rem;
+    padding: 0.25rem 0.4rem;
+    border: 2px solid #9f1239;
+    border-radius: 4px;
+    background: #ffffff;
+    color: #111827;
+    font-weight: 700;
+}
+
+
+@media (max-width: 900px) {
+    .container {
+        margin: 1rem;
+        padding: 0.75rem;
+    }
+
+    .top-bar {
+        padding: 0.75rem 1rem;
+        flex-direction: column;
+        gap: 0.75rem;
+        align-items: flex-start;
+    }
+
+    .nav {
+        flex-wrap: wrap;
+    }
+
+    .loadout-table,
+    .weapon-profile-table {
+        font-size: 0.78rem;
+    }
+
+        .loadout-table .model-name-cell,
         .weapon-profile-table td:first-child {
-            min-width: 220px;
+            min-width: 160px;
         }
-
-        .weapon-profile-table td:first-child,
-        .weapon-profile-table td:nth-child(2),
-        .weapon-profile-table td:last-child {
-            text-align: left;
-        }
-
-.small-number-input {
-    width: 72px;
-    max-width: 100%;
-    box-sizing: border-box;
-    text-align: center;
 }
