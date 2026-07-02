@@ -38,73 +38,181 @@
 
         <div class="simulation-loadout-grid">
             <fieldset class="fieldset">
-                <legend>Состав юнита A</legend>
-
-                <table class="data-table">
+                <table class="data-table loadout-table">
                     <thead>
                         <tr>
                             <th>Модель</th>
-                            <th>Min</th>
-                            <th>Max</th>
+                            <th>M</th>
+                            <th>T</th>
+                            <th>Sv</th>
+                            <th>W</th>
+                            <th>Ld</th>
+                            <th>OC</th>
                             <th>Количество</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (int i = 0; i < Model.Input.UnitALoadout.Count; i++)
                         {
-                            <tr>
-                                <td>
+                            <tr class="model-stat-row">
+                                <td class="model-name-cell">
                                     @Model.Input.UnitALoadout[i].ModelName
+
                                     <input type="hidden" asp-for="Input.UnitALoadout[i].ModelId" />
                                     <input type="hidden" asp-for="Input.UnitALoadout[i].ModelName" />
                                     <input type="hidden" asp-for="Input.UnitALoadout[i].MinCount" />
                                     <input type="hidden" asp-for="Input.UnitALoadout[i].MaxCount" />
+
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].Move" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].Toughness" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].Save" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].InvulnerableSave" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].Wounds" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].Leadership" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].OC" />
                                 </td>
-                                <td>@Model.Input.UnitALoadout[i].MinCount</td>
-                                <td>@Model.Input.UnitALoadout[i].MaxCount</td>
+                                <td>@Model.Input.UnitALoadout[i].Move"</td>
+                                <td>@Model.Input.UnitALoadout[i].Toughness</td>
+                                <td>@Model.Input.UnitALoadout[i].SaveDisplay</td>
+                                <td>@Model.Input.UnitALoadout[i].Wounds</td>
+                                <td>@Model.Input.UnitALoadout[i].LeadershipDisplay</td>
+                                <td>@Model.Input.UnitALoadout[i].OC</td>
                                 <td>
                                     <input class="small-number-input" asp-for="Input.UnitALoadout[i].Count" />
                                     <span asp-validation-for="Input.UnitALoadout[i].Count"></span>
                                 </td>
                             </tr>
+
+                            if (Model.Input.UnitALoadout[i].WeaponProfiles.Any())
+                            {
+                                <tr class="weapon-row">
+                                    <td colspan="8">
+                                        <table class="weapon-profile-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Оружие</th>
+                                                    <th>Профиль</th>
+                                                    <th>Range</th>
+                                                    <th>A</th>
+                                                    <th>BS/WS</th>
+                                                    <th>S</th>
+                                                    <th>AP</th>
+                                                    <th>D</th>
+                                                    <th>Правила</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int w = 0; w < Model.Input.UnitALoadout[i].WeaponProfiles.Count; w++)
+                                                {
+                                                    <tr>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].WeaponName</td>
+                                                        <td>@(Model.Input.UnitALoadout[i].WeaponProfiles[w].ProfileName ?? "—")</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].RangeDisplay</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].Attacks</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].SkillDisplay</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].Strength</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].ArmorPiercing</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].Damage</td>
+                                                        <td>@Model.Input.UnitALoadout[i].WeaponProfiles[w].AbilityDisplay</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
-                </table>
+                </table>                
             </fieldset>
 
             <fieldset class="fieldset">
-                <legend>Состав юнита B</legend>
-
-                <table class="data-table">
+                <table class="data-table loadout-table">
                     <thead>
                         <tr>
                             <th>Модель</th>
-                            <th>Min</th>
-                            <th>Max</th>
+                            <th>M</th>
+                            <th>T</th>
+                            <th>Sv</th>
+                            <th>W</th>
+                            <th>Ld</th>
+                            <th>OC</th>
                             <th>Количество</th>
                         </tr>
                     </thead>
                     <tbody>
                         @for (int i = 0; i < Model.Input.UnitBLoadout.Count; i++)
                         {
-                            <tr>
-                                <td>
+                            <tr class="model-stat-row">
+                                <td class="model-name-cell">
                                     @Model.Input.UnitBLoadout[i].ModelName
+
                                     <input type="hidden" asp-for="Input.UnitBLoadout[i].ModelId" />
                                     <input type="hidden" asp-for="Input.UnitBLoadout[i].ModelName" />
                                     <input type="hidden" asp-for="Input.UnitBLoadout[i].MinCount" />
                                     <input type="hidden" asp-for="Input.UnitBLoadout[i].MaxCount" />
+
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].Move" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].Toughness" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].Save" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].InvulnerableSave" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].Wounds" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].Leadership" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].OC" />
                                 </td>
-                                <td>@Model.Input.UnitBLoadout[i].MinCount</td>
-                                <td>@Model.Input.UnitBLoadout[i].MaxCount</td>
+                                <td>@Model.Input.UnitBLoadout[i].Move"</td>
+                                <td>@Model.Input.UnitBLoadout[i].Toughness</td>
+                                <td>@Model.Input.UnitBLoadout[i].SaveDisplay</td>
+                                <td>@Model.Input.UnitBLoadout[i].Wounds</td>
+                                <td>@Model.Input.UnitBLoadout[i].LeadershipDisplay</td>
+                                <td>@Model.Input.UnitBLoadout[i].OC</td>
                                 <td>
                                     <input class="small-number-input" asp-for="Input.UnitBLoadout[i].Count" />
                                     <span asp-validation-for="Input.UnitBLoadout[i].Count"></span>
                                 </td>
                             </tr>
+
+                            if (Model.Input.UnitBLoadout[i].WeaponProfiles.Any())
+                            {
+                                <tr class="weapon-row">
+                                    <td colspan="8">
+                                        <table class="weapon-profile-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Оружие</th>
+                                                    <th>Профиль</th>
+                                                    <th>Range</th>
+                                                    <th>A</th>
+                                                    <th>BS/WS</th>
+                                                    <th>S</th>
+                                                    <th>AP</th>
+                                                    <th>D</th>
+                                                    <th>Правила</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                @for (int w = 0; w < Model.Input.UnitBLoadout[i].WeaponProfiles.Count; w++)
+                                                {
+                                                    <tr>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].WeaponName</td>
+                                                        <td>@(Model.Input.UnitBLoadout[i].WeaponProfiles[w].ProfileName ?? "—")</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].RangeDisplay</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].Attacks</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].SkillDisplay</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].Strength</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].ArmorPiercing</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].Damage</td>
+                                                        <td>@Model.Input.UnitBLoadout[i].WeaponProfiles[w].AbilityDisplay</td>
+                                                    </tr>
+                                                }
+                                            </tbody>
+                                        </table>
+                                    </td>
+                                </tr>
+                            }
                         }
                     </tbody>
-                </table>
+                </table>                
             </fieldset>
         </div>
 

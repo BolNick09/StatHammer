@@ -264,10 +264,19 @@
 
 .simulation-loadout-grid {
     display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
+    grid-template-columns: 1fr;
+    gap: 22px;
     margin-top: 12px;
     margin-bottom: 18px;
+}
+
+    .simulation-loadout-grid .fieldset {
+        width: 100%;
+        box-sizing: border-box;
+    }
+
+.loadout-table {
+    width: 100%;
 }
 
 .small-number-input {
@@ -280,4 +289,78 @@
     .simulation-loadout-grid {
         grid-template-columns: 1fr;
     }
+}
+
+.loadout-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+    .loadout-table th {
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .loadout-table td {
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    .loadout-table .model-name-cell {
+        text-align: left;
+        font-weight: 600;
+        min-width: 220px;
+    }
+
+.model-stat-row {
+    background: #f8fafc;
+}
+
+    .model-stat-row:nth-child(4n + 1) {
+        background: #eef2f7;
+    }
+
+.weapon-row td {
+    padding: 0 8px 12px 8px;
+    background: #ffffff;
+}
+
+.weapon-profile-table {
+    width: 100%;
+    margin-top: 6px;
+    border-collapse: collapse;
+    font-size: 13px;
+    border: 1px solid #cbd5e1;
+    table-layout: auto;
+}
+
+    .weapon-profile-table th {
+        background: #2f4a38;
+        color: #ffffff;
+        padding: 6px 8px;
+        text-align: center;
+        white-space: nowrap;
+    }
+
+    .weapon-profile-table td {
+        padding: 6px 8px;
+        border-bottom: 1px solid #d9e2ec;
+        text-align: center;
+    }
+
+        .weapon-profile-table td:first-child {
+            min-width: 220px;
+        }
+
+        .weapon-profile-table td:first-child,
+        .weapon-profile-table td:nth-child(2),
+        .weapon-profile-table td:last-child {
+            text-align: left;
+        }
+
+.small-number-input {
+    width: 72px;
+    max-width: 100%;
+    box-sizing: border-box;
+    text-align: center;
 }

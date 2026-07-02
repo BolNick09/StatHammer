@@ -35,9 +35,59 @@ namespace StatHammer.Server.Pages.Simulations
             Units = await _simulationPageService.GetUnitSelectListAsync(cancellationToken);
             EnsureDefaultUnitSelection();
 
-            await RefreshLoadoutsAfterUnitSelectionChangeAsync(cancellationToken);
+            await ReloadLoadoutsAfterSelectionChangeAsync(cancellationToken);
 
             return Page();
+        }
+        private async Task ReloadLoadoutsAfterSelectionChangeAsync(CancellationToken cancellationToken)
+        {
+            var unitAWasSame = Input.UnitALoadoutUnitId == Input.UnitAId;
+            var unitBWasSame = Input.UnitBLoadoutUnitId == Input.UnitBId;
+
+            Input.UnitALoadout = await LoadUnitLoadoutPreservingCountsAsync(
+                Input.UnitAId,
+                unitAWasSame ? Input.UnitALoadout : new List<SimulationUnitModelCountViewModel>(),
+                cancellationToken);
+
+            Input.UnitBLoadout = await LoadUnitLoadoutPreservingCountsAsync(
+                Input.UnitBId,
+                unitBWasSame ? Input.UnitBLoadout : new List<SimulationUnitModelCountViewModel>(),
+                cancellationToken);
+
+            Input.UnitALoadoutUnitId = Input.UnitAId;
+            Input.UnitBLoadoutUnitId = Input.UnitBId;
+
+            ClearLoadoutModelState();
+        }
+        private async Task<List<SimulationUnitModelCountViewModel>> LoadUnitLoadoutPreservingCountsAsync(
+    int unitId,
+    List<SimulationUnitModelCountViewModel> previousLoadout,
+    CancellationToken cancellationToken)
+        {
+            if (unitId <= 0)
+            {
+                return new List<SimulationUnitModelCountViewModel>();
+            }
+
+            var freshLoadout = await _simulationPageService.GetUnitLoadoutAsync(
+                unitId,
+                cancellationToken);
+
+            var previousCounts = previousLoadout
+                .GroupBy(x => x.ModelId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Last().Count);
+
+            foreach (var row in freshLoadout)
+            {
+                if (previousCounts.TryGetValue(row.ModelId, out var previousCount))
+                {
+                    row.Count = previousCount;
+                }
+            }
+
+            return freshLoadout;
         }
 
         private async Task RefreshLoadoutsAfterUnitSelectionChangeAsync(CancellationToken cancellationToken)
@@ -94,16 +144,8 @@ namespace StatHammer.Server.Pages.Simulations
 
         private void ClearLoadoutModelState()
         {
-            foreach (var key in ModelState.Keys
-                .Where(key =>
-                    key.StartsWith("Input.UnitALoadout") ||
-                    key.StartsWith("Input.UnitBLoadout") ||
-                    key == "Input.UnitALoadoutUnitId" ||
-                    key == "Input.UnitBLoadoutUnitId")
-                .ToList())
-            {
-                ModelState.Remove(key);
-            }
+            ClearUnitALoadoutModelState();
+            ClearUnitBLoadoutModelState();
         }
 
         public async Task<IActionResult> OnPostRunAsync(CancellationToken cancellationToken)
@@ -237,13 +279,20 @@ namespace StatHammer.Server.Pages.Simulations
 
         private async Task EnsureLoadoutsForRedisplayAsync(CancellationToken cancellationToken)
         {
-            if (!Input.UnitALoadout.Any() ||
-                !Input.UnitBLoadout.Any() ||
-                !IsLoadoutActualForSelectedUnits())
-            {
-                ClearLoadoutModelState();
-                await LoadSelectedUnitLoadoutsAsync(cancellationToken);
-            }
+            Input.UnitALoadout = await LoadUnitLoadoutPreservingCountsAsync(
+                Input.UnitAId,
+                Input.UnitALoadout,
+                cancellationToken);
+
+            Input.UnitBLoadout = await LoadUnitLoadoutPreservingCountsAsync(
+                Input.UnitBId,
+                Input.UnitBLoadout,
+                cancellationToken);
+
+            Input.UnitALoadoutUnitId = Input.UnitAId;
+            Input.UnitBLoadoutUnitId = Input.UnitBId;
+
+            ClearLoadoutModelState();
         }
 
         public class SimulationInputModel
