@@ -31,7 +31,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             bool unitAPrefersMelee,
             bool unitBPrefersMelee,
             CancellationToken cancellationToken = default,
-            SimulationModifiers? modifiers = null)
+            SimulationModifiers? modifiers = null,
+            SimulationLoadout? loadout = null)
         {
             if (simulationCount <= 0)
             {
@@ -47,7 +48,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             var prototypeUnitA = await _unitRuntimeBuilder.BuildUnitAsync(
                 unitAId,
                 unitAPrefersMelee,
-                cancellationToken);
+                cancellationToken,
+                loadout?.UnitA);
 
             if (prototypeUnitA == null)
             {
@@ -57,7 +59,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             var prototypeUnitB = await _unitRuntimeBuilder.BuildUnitAsync(
                 unitBId,
                 unitBPrefersMelee,
-                cancellationToken);
+                cancellationToken,
+                loadout?.UnitB);
 
             if (prototypeUnitB == null)
             {

@@ -5,7 +5,12 @@ namespace StatHammer.Server.PageServices.Simulations
 {
     public interface ISimulationPageService
     {
-        Task<List<SelectListItem>> GetUnitSelectListAsync(CancellationToken cancellationToken = default);
+        Task<List<SelectListItem>> GetUnitSelectListAsync(
+            CancellationToken cancellationToken = default);
+
+        Task<List<SimulationUnitModelCountViewModel>> GetUnitLoadoutAsync(
+            int unitId,
+            CancellationToken cancellationToken = default);
 
         Task<SimulationRunViewModel> RunSimulationAsync(
             int unitAId,
@@ -16,6 +21,7 @@ namespace StatHammer.Server.PageServices.Simulations
             int maxDegreeOfParallelism,
             bool saveResult,
             SimulationModifiers modifiers,
+            SimulationLoadout? loadout,
             CancellationToken cancellationToken = default);
     }
 }

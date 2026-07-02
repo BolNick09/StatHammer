@@ -30,7 +30,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             bool unitBPrefersMelee,
             int maxDegreeOfParallelism,
             CancellationToken cancellationToken = default,
-            SimulationModifiers? modifiers = null)
+            SimulationModifiers? modifiers = null,
+            SimulationLoadout? loadout = null)
         {
             if (simulationCount <= 0)
             {
@@ -61,7 +62,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
                 var builtUnitA = await unitRuntimeBuilder.BuildUnitAsync(
                     unitAId,
                     unitAPrefersMelee,
-                    cancellationToken);
+                    cancellationToken,
+                    loadout?.UnitA);
 
                 if (builtUnitA == null)
                 {
@@ -71,7 +73,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
                 var builtUnitB = await unitRuntimeBuilder.BuildUnitAsync(
                     unitBId,
                     unitBPrefersMelee,
-                    cancellationToken);
+                    cancellationToken,
+                    loadout?.UnitB);
 
                 if (builtUnitB == null)
                 {

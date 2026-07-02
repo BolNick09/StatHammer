@@ -17,18 +17,19 @@ namespace StatHammer.Server.Simulation.Services
         public async Task<SimulationUnit?> BuildUnitAsync(
             int unitId,
             bool preferMelee,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            UnitLoadoutSelection? loadout = null)
         {
             var unit = await _context.Units
-            .AsNoTracking()
+                .AsNoTracking()
                 .AsSplitQuery()
-                    .Include(u => u.UnitModels)
-                        .ThenInclude(um => um.Model)
-                            .ThenInclude(m => m.ModelWeapons)
-                                .ThenInclude(mw => mw.Weapon)
-                                    .ThenInclude(w => w.WeaponProfiles)
-                                        .ThenInclude(wp => wp.WeaponProfileAbilities)
-                                            .ThenInclude(wpa => wpa.Ability)
+                .Include(u => u.UnitModels)
+                    .ThenInclude(um => um.Model)
+                        .ThenInclude(m => m.ModelWeapons)
+                            .ThenInclude(mw => mw.Weapon)
+                                .ThenInclude(w => w.WeaponProfiles)
+                                    .ThenInclude(wp => wp.WeaponProfileAbilities)
+                                        .ThenInclude(wpa => wpa.Ability)
                 .Include(u => u.UnitModels)
                     .ThenInclude(um => um.Model)
                         .ThenInclude(m => m.ModelAbilities)
@@ -61,14 +62,48 @@ namespace StatHammer.Server.Simulation.Services
                     .ToList()
             };
 
-            foreach (var unitModel in unit.UnitModels)
-            {
-                if (unitModel.Model == null)                
-                    continue;
-                
+            var loadoutCounts = (loadout?.ModelCounts ?? new List<UnitModelCountSelection>())
+                .GroupBy(x => x.ModelId)
+                .ToDictionary(
+                    group => group.Key,
+                    group => group.Sum(x => x.Count));
 
-                for (int i = 0; i < unitModel.MinCount; i++)                
-                    runtimeUnit.Models.Add(BuildSimulationModel(unitModel.Model));                
+            var allowedModelIds = unit.UnitModels
+                .Select(um => um.ModelId)
+                .ToHashSet();
+
+            var forbiddenModelIds = loadoutCounts.Keys
+                .Where(modelId => !allowedModelIds.Contains(modelId))
+                .ToList();
+
+            if (forbiddenModelIds.Any())
+            {
+                throw new InvalidOperationException(
+                    "Loadout contains models that are not allowed for this unit: " +
+                    string.Join(", ", forbiddenModelIds));
+            }
+
+            foreach (var unitModel in unit.UnitModels.OrderBy(um => um.Model?.Name))
+            {
+                if (unitModel.Model == null)
+                {
+                    continue;
+                }
+
+                var modelCount = loadoutCounts.TryGetValue(unitModel.ModelId, out var selectedCount)
+                    ? selectedCount
+                    : unitModel.MinCount;
+
+                if (modelCount < 0)
+                {
+                    throw new InvalidOperationException(
+                        $"Invalid model count for '{unitModel.Model.Name}'. Count cannot be negative.");
+                }
+
+                for (int i = 0; i < modelCount; i++)
+                {
+                    runtimeUnit.Models.Add(BuildSimulationModel(unitModel.Model));
+                }
             }
 
             return runtimeUnit;
@@ -122,5 +157,4 @@ namespace StatHammer.Server.Simulation.Services
             };
         }
     }
-
 }

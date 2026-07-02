@@ -14,6 +14,7 @@ namespace StatHammer.Server.Simulation.Battle.Services
             bool unitBPrefersMelee,
             int maxDegreeOfParallelism,
             CancellationToken cancellationToken = default,
-            SimulationModifiers? modifiers = null);
+            SimulationModifiers? modifiers = null,
+            SimulationLoadout? loadout = null);
     }
 }

@@ -13,6 +13,7 @@ namespace StatHammer.Server.Simulation.Battle.Services
             bool unitAPrefersMelee,
             bool unitBPrefersMelee,
             CancellationToken cancellationToken = default,
-            SimulationModifiers? modifiers = null);
+            SimulationModifiers? modifiers = null,
+            SimulationLoadout? loadout = null);
     }
 }

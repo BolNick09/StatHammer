@@ -27,6 +27,89 @@
             <span asp-validation-for="Input.UnitBId"></span>
         </div>
 
+        <input type="hidden" asp-for="Input.UnitALoadoutUnitId" />
+        <input type="hidden" asp-for="Input.UnitBLoadoutUnitId" />  
+
+        <button class="btn btn-secondary" type="submit" asp-page-handler="Loadout">
+            Обновить состав
+        </button>
+
+        <h2>Loadout</h2>
+
+        <div class="simulation-loadout-grid">
+            <fieldset class="fieldset">
+                <legend>Состав юнита A</legend>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Модель</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Input.UnitALoadout.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Input.UnitALoadout[i].ModelName
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].ModelId" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].ModelName" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].MinCount" />
+                                    <input type="hidden" asp-for="Input.UnitALoadout[i].MaxCount" />
+                                </td>
+                                <td>@Model.Input.UnitALoadout[i].MinCount</td>
+                                <td>@Model.Input.UnitALoadout[i].MaxCount</td>
+                                <td>
+                                    <input class="small-number-input" asp-for="Input.UnitALoadout[i].Count" />
+                                    <span asp-validation-for="Input.UnitALoadout[i].Count"></span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend>Состав юнита B</legend>
+
+                <table class="data-table">
+                    <thead>
+                        <tr>
+                            <th>Модель</th>
+                            <th>Min</th>
+                            <th>Max</th>
+                            <th>Количество</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @for (int i = 0; i < Model.Input.UnitBLoadout.Count; i++)
+                        {
+                            <tr>
+                                <td>
+                                    @Model.Input.UnitBLoadout[i].ModelName
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].ModelId" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].ModelName" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].MinCount" />
+                                    <input type="hidden" asp-for="Input.UnitBLoadout[i].MaxCount" />
+                                </td>
+                                <td>@Model.Input.UnitBLoadout[i].MinCount</td>
+                                <td>@Model.Input.UnitBLoadout[i].MaxCount</td>
+                                <td>
+                                    <input class="small-number-input" asp-for="Input.UnitBLoadout[i].Count" />
+                                    <span asp-validation-for="Input.UnitBLoadout[i].Count"></span>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </fieldset>
+        </div>
+
+        <h2>Параметры запуска</h2>
+
         <div class="form-row">
             <label asp-for="Input.SimulationCount"></label>
             <input asp-for="Input.SimulationCount" />
@@ -129,7 +212,9 @@
             </fieldset>
         </div>
 
-        <button class="btn" type="submit">Запустить симуляцию</button>
+        <button class="btn" type="submit" asp-page-handler="Run">
+            Запустить симуляцию
+        </button>
     </form>
 </div>
 

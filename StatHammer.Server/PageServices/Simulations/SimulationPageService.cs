@@ -27,7 +27,8 @@ namespace StatHammer.Server.PageServices.Simulations
             _persistenceService = persistenceService;
         }
 
-        public async Task<List<SelectListItem>> GetUnitSelectListAsync(CancellationToken cancellationToken = default)
+        public async Task<List<SelectListItem>> GetUnitSelectListAsync(
+            CancellationToken cancellationToken = default)
         {
             return await _context.Units
                 .OrderBy(u => u.Name)
@@ -35,6 +36,27 @@ namespace StatHammer.Server.PageServices.Simulations
                 {
                     Value = u.Id.ToString(),
                     Text = u.Name
+                })
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<List<SimulationUnitModelCountViewModel>> GetUnitLoadoutAsync(
+            int unitId,
+            CancellationToken cancellationToken = default)
+        {
+            return await _context.UnitModels
+                .AsNoTracking()
+                .Include(um => um.Model)
+                .Where(um => um.UnitId == unitId)
+                .Where(um => um.Model != null)
+                .OrderBy(um => um.Model!.Name)
+                .Select(um => new SimulationUnitModelCountViewModel
+                {
+                    ModelId = um.ModelId,
+                    ModelName = um.Model!.Name,
+                    MinCount = um.MinCount,
+                    MaxCount = um.MaxCount,
+                    Count = um.MinCount
                 })
                 .ToListAsync(cancellationToken);
         }
@@ -48,6 +70,7 @@ namespace StatHammer.Server.PageServices.Simulations
             int maxDegreeOfParallelism,
             bool saveResult,
             SimulationModifiers modifiers,
+            SimulationLoadout? loadout,
             CancellationToken cancellationToken = default)
         {
             BattleSimulationBatchResult result;
@@ -63,7 +86,8 @@ namespace StatHammer.Server.PageServices.Simulations
                     unitBPrefersMelee: false,
                     maxDegreeOfParallelism,
                     cancellationToken,
-                    modifiers);
+                    modifiers,
+                    loadout);
             }
             else
             {
@@ -75,7 +99,8 @@ namespace StatHammer.Server.PageServices.Simulations
                     unitAPrefersMelee: false,
                     unitBPrefersMelee: false,
                     cancellationToken,
-                    modifiers);
+                    modifiers,
+                    loadout);
             }
 
             var viewModel = new SimulationRunViewModel
