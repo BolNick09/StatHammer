@@ -18,9 +18,15 @@ namespace StatHammer.Server.Simulation.Combat.Services
 
         public UnitRangedPhaseResult ResolveRangedPhase(
             SimulationUnit attacker,
-            SimulationUnit defender)
+            SimulationUnit defender,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null)
         {
-            var attackResult = _unitAttackResolver.ResolveRangedAttack(attacker, defender);
+            var attackResult = _unitAttackResolver.ResolveRangedAttack(
+                attacker,
+                defender,
+                attackerModifiers,
+                defenderModifiers);
 
             var allDamagePackets = attackResult.WeaponResults
                 .SelectMany(wr => wr.DamagePackets)

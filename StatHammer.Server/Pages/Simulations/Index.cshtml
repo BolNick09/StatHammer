@@ -59,6 +59,76 @@
             </label>
         </div>
 
+        <h2>Настройки симуляции</h2>
+
+        <p class="muted">
+            Модификаторы применяются к выбранной стороне во время расчёта.
+            Положительный Hit/Wound/Save улучшает бросок.
+            AP: отрицательное значение усиливает бронепробитие, например -1 делает AP лучше.
+        </p>
+
+        <div class="simulation-modifiers-grid">
+            <fieldset class="fieldset">
+                <legend>Модификаторы юнита A</legend>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label asp-for="Input.UnitAHitModifier"></label>
+                        <input asp-for="Input.UnitAHitModifier" />
+                        <span asp-validation-for="Input.UnitAHitModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitAWoundModifier"></label>
+                        <input asp-for="Input.UnitAWoundModifier" />
+                        <span asp-validation-for="Input.UnitAWoundModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitAArmorPiercingModifier"></label>
+                        <input asp-for="Input.UnitAArmorPiercingModifier" />
+                        <span asp-validation-for="Input.UnitAArmorPiercingModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitASaveModifier"></label>
+                        <input asp-for="Input.UnitASaveModifier" />
+                        <span asp-validation-for="Input.UnitASaveModifier"></span>
+                    </div>
+                </div>
+            </fieldset>
+
+            <fieldset class="fieldset">
+                <legend>Модификаторы юнита B</legend>
+
+                <div class="form-grid">
+                    <div class="form-row">
+                        <label asp-for="Input.UnitBHitModifier"></label>
+                        <input asp-for="Input.UnitBHitModifier" />
+                        <span asp-validation-for="Input.UnitBHitModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitBWoundModifier"></label>
+                        <input asp-for="Input.UnitBWoundModifier" />
+                        <span asp-validation-for="Input.UnitBWoundModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitBArmorPiercingModifier"></label>
+                        <input asp-for="Input.UnitBArmorPiercingModifier" />
+                        <span asp-validation-for="Input.UnitBArmorPiercingModifier"></span>
+                    </div>
+
+                    <div class="form-row">
+                        <label asp-for="Input.UnitBSaveModifier"></label>
+                        <input asp-for="Input.UnitBSaveModifier" />
+                        <span asp-validation-for="Input.UnitBSaveModifier"></span>
+                    </div>
+                </div>
+            </fieldset>
+        </div>
+
         <button class="btn" type="submit">Запустить симуляцию</button>
     </form>
 </div>

@@ -1,5 +1,6 @@
 ﻿using StatHammer.Server.Simulation.Battle.Models;
 using StatHammer.Server.Simulation.Battle.Models.Aggregation;
+using StatHammer.Server.Simulation.Models;
 using StatHammer.Server.Simulation.Runtime;
 using StatHammer.Server.Simulation.Services;
 using System.Diagnostics;
@@ -29,7 +30,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             int maxTurns,
             bool unitAPrefersMelee,
             bool unitBPrefersMelee,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            SimulationModifiers? modifiers = null)
         {
             if (simulationCount <= 0)
             {
@@ -94,7 +96,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
                 var simulation = _battleSimulationService.SimulateBattle(
                     unitA,
                     unitB,
-                    maxTurns);
+                    maxTurns,
+                    modifiers);
 
                 simulationStopwatch.Stop();
                 simulateBattlesElapsed += simulationStopwatch.Elapsed;

@@ -16,8 +16,11 @@ namespace StatHammer.Server.Simulation.Battle.Services
         public BattleSimulationResult SimulateBattle(
             SimulationUnit unitA,
             SimulationUnit unitB,
-            int maxTurns)
+            int maxTurns,
+            SimulationModifiers? modifiers = null)
         {
+            modifiers ??= SimulationModifiers.None;
+
             var result = new BattleSimulationResult
             {
                 UnitAName = unitA.Name,
@@ -34,7 +37,12 @@ namespace StatHammer.Server.Simulation.Battle.Services
 
                 if (!unitA.IsDestroyed)
                 {
-                    turnResult.SideAAction = ExecuteRangedAction("A", unitA, unitB);
+                    turnResult.SideAAction = ExecuteRangedAction(
+                        "A",
+                        unitA,
+                        unitB,
+                        modifiers.UnitA,
+                        modifiers.UnitB);
 
                     if (unitB.IsDestroyed)
                     {
@@ -48,7 +56,12 @@ namespace StatHammer.Server.Simulation.Battle.Services
 
                 if (!unitB.IsDestroyed)
                 {
-                    turnResult.SideBAction = ExecuteRangedAction("B", unitB, unitA);
+                    turnResult.SideBAction = ExecuteRangedAction(
+                        "B",
+                        unitB,
+                        unitA,
+                        modifiers.UnitB,
+                        modifiers.UnitA);
 
                     if (unitA.IsDestroyed)
                     {
@@ -85,12 +98,18 @@ namespace StatHammer.Server.Simulation.Battle.Services
         private BattleSideTurnResult ExecuteRangedAction(
             string side,
             SimulationUnit attacker,
-            SimulationUnit defender)
+            SimulationUnit defender,
+            UnitCombatModifiers attackerModifiers,
+            UnitCombatModifiers defenderModifiers)
         {
             var startingAliveModels = defender.AliveModelCount;
             var startingTotalWounds = defender.TotalCurrentWounds;
 
-            var phaseResult = _unitCombatResolver.ResolveRangedPhase(attacker, defender);
+            var phaseResult = _unitCombatResolver.ResolveRangedPhase(
+                attacker,
+                defender,
+                attackerModifiers,
+                defenderModifiers);
 
             return new BattleSideTurnResult
             {

@@ -234,3 +234,30 @@
 .second-profile-toggle {
     margin: 8px 0 14px 0;
 }
+
+
+.simulation-modifiers-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+    margin-bottom: 16px;
+}
+
+    .simulation-modifiers-grid .form-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+    }
+
+    .simulation-modifiers-grid input {
+        max-width: 100%;
+    }
+
+@media (max-width: 900px) {
+    .simulation-modifiers-grid {
+        grid-template-columns: 1fr;
+    }
+
+        .simulation-modifiers-grid .form-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
+}

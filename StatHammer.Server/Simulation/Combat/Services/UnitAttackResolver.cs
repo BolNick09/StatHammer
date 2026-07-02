@@ -14,8 +14,13 @@ namespace StatHammer.Server.Simulation.Combat.Services
 
         public UnitAttackResult ResolveRangedAttack(
             SimulationUnit attacker,
-            SimulationUnit defender)
+            SimulationUnit defender,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null)
         {
+            attackerModifiers ??= new UnitCombatModifiers();
+            defenderModifiers ??= new UnitCombatModifiers();
+
             var result = new UnitAttackResult
             {
                 AttackingUnitName = attacker.Name,
@@ -23,9 +28,10 @@ namespace StatHammer.Server.Simulation.Combat.Services
             };
 
             var primaryDefender = defender.Models.FirstOrDefault(m => m.IsAlive);
-            if (primaryDefender == null)            
+            if (primaryDefender == null)
+            {
                 return result;
-
+            }
 
             foreach (var attackingModel in attacker.Models.Where(m => m.IsAlive))
             {
@@ -33,15 +39,18 @@ namespace StatHammer.Server.Simulation.Combat.Services
                 {
                     var selectedProfile = SelectBestRangedProfile(weapon);
 
-                    if (selectedProfile == null)                    
+                    if (selectedProfile == null)
+                    {
                         continue;
-                    
+                    }
 
                     var weaponResult = _attackResolver.ResolveAttack(
                         attackingModel,
                         primaryDefender,
                         weapon,
-                        selectedProfile);
+                        selectedProfile,
+                        attackerModifiers,
+                        defenderModifiers);
 
                     result.WeaponResults.Add(weaponResult);
 

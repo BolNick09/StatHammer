@@ -1,4 +1,5 @@
 ﻿using StatHammer.Server.Simulation.Battle.Models.Aggregation;
+using StatHammer.Server.Simulation.Models;
 
 namespace StatHammer.Server.Simulation.Battle.Services
 {
@@ -11,6 +12,7 @@ namespace StatHammer.Server.Simulation.Battle.Services
             int maxTurns,
             bool unitAPrefersMelee,
             bool unitBPrefersMelee,
-            CancellationToken cancellationToken = default);
+            CancellationToken cancellationToken = default,
+            SimulationModifiers? modifiers = null);
     }
 }

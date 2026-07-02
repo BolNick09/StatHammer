@@ -8,7 +8,6 @@ namespace StatHammer.Server.Simulation.Combat.Services
     {
         private readonly IDiceExpressionParser _diceExpressionParser;
         private readonly IDiceRoller _diceRoller;
-        private readonly ICombatDiceService _combatDiceService;
 
         public AttackResolver(
             IDiceExpressionParser diceExpressionParser,
@@ -17,23 +16,42 @@ namespace StatHammer.Server.Simulation.Combat.Services
         {
             _diceExpressionParser = diceExpressionParser;
             _diceRoller = diceRoller;
-            _combatDiceService = combatDiceService;
         }
 
         public AttackResolutionResult ResolveAttack(
-    SimulationModel attacker,
-    SimulationModel defender,
-    SimulationWeapon weapon,
-    SimulationWeaponProfile weaponProfile)
+            SimulationModel attacker,
+            SimulationModel defender,
+            SimulationWeapon weapon,
+            SimulationWeaponProfile weaponProfile,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null)
         {
+            attackerModifiers ??= new UnitCombatModifiers();
+            defenderModifiers ??= new UnitCombatModifiers();
+
             var attacks = RollExpressionTotal(weaponProfile.Attacks);
-            var hits = _combatDiceService.CountSuccesses(attacks, weaponProfile.Skill);
+
+            var hits = CountModifiedD6Successes(
+                attacks,
+                weaponProfile.Skill,
+                attackerModifiers.HitModifier);
 
             var woundTarget = GetWoundTarget(weaponProfile.Strength, defender.Toughness);
-            var wounds = _combatDiceService.CountSuccesses(hits, woundTarget);
 
-            var saveTarget = GetSaveTarget(defender, weaponProfile.ArmorPiercing);
-            var successfulSaves = _combatDiceService.CountSuccesses(wounds, saveTarget);
+            var wounds = CountModifiedD6Successes(
+                hits,
+                woundTarget,
+                attackerModifiers.WoundModifier);
+
+            var effectiveArmorPiercing =
+                weaponProfile.ArmorPiercing + attackerModifiers.ArmorPiercingModifier;
+
+            var saveTarget = GetSaveTarget(defender, effectiveArmorPiercing);
+
+            var successfulSaves = CountModifiedD6Successes(
+                wounds,
+                saveTarget,
+                defenderModifiers.SaveModifier);
 
             var unsavedWounds = Math.Max(0, wounds - successfulSaves);
 
@@ -49,9 +67,10 @@ namespace StatHammer.Server.Simulation.Combat.Services
                 var blockedForThisPacket = 0;
                 if (defender.FeelNoPain.HasValue)
                 {
-                    blockedForThisPacket = _combatDiceService.CountSuccesses(
+                    blockedForThisPacket = CountModifiedD6Successes(
                         damageRoll,
-                        defender.FeelNoPain.Value);
+                        defender.FeelNoPain.Value,
+                        modifier: 0);
                 }
 
                 blockedByFnp += blockedForThisPacket;
@@ -86,16 +105,53 @@ namespace StatHammer.Server.Simulation.Combat.Services
             return _diceRoller.Roll(parsed).Total;
         }
 
+        private int CountModifiedD6Successes(
+            int rollCount,
+            int target,
+            int modifier)
+        {
+            if (rollCount <= 0)
+            {
+                return 0;
+            }
+
+            var successes = 0;
+
+            for (int i = 0; i < rollCount; i++)
+            {
+                var roll = _diceRoller.Roll("D6").Total;
+                var modifiedRoll = roll + modifier;
+
+                if (modifiedRoll >= target)
+                {
+                    successes++;
+                }
+            }
+
+            return successes;
+        }
+
         private static int GetWoundTarget(int strength, int toughness)
         {
             if (strength >= toughness * 2)
-                return 2;      
-            else if (strength > toughness)            
+            {
+                return 2;
+            }
+
+            if (strength > toughness)
+            {
                 return 3;
-            else if (strength == toughness)
-                return 4;   
-            else if (strength * 2 <= toughness)            
-                return 6;            
+            }
+
+            if (strength == toughness)
+            {
+                return 4;
+            }
+
+            if (strength * 2 <= toughness)
+            {
+                return 6;
+            }
 
             return 5;
         }
@@ -106,13 +162,15 @@ namespace StatHammer.Server.Simulation.Combat.Services
 
             int bestSave = modifiedSave;
 
-            if (defender.InvulnerableSave.HasValue)            
+            if (defender.InvulnerableSave.HasValue)
+            {
                 bestSave = Math.Min(bestSave, defender.InvulnerableSave.Value);
-            
+            }
 
-            if (bestSave < 2)            
+            if (bestSave < 2)
+            {
                 bestSave = 2;
-            
+            }
 
             return bestSave;
         }

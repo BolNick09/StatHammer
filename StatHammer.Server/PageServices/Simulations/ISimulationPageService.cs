@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc.Rendering;
+using StatHammer.Server.Simulation.Models;
 
 namespace StatHammer.Server.PageServices.Simulations
 {
@@ -14,6 +15,7 @@ namespace StatHammer.Server.PageServices.Simulations
             bool useParallel,
             int maxDegreeOfParallelism,
             bool saveResult,
+            SimulationModifiers modifiers,
             CancellationToken cancellationToken = default);
     }
 }

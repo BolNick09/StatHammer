@@ -4,6 +4,7 @@ using StatHammer.Server.Data;
 using StatHammer.Server.Simulation.Battle.Models.Aggregation;
 using StatHammer.Server.Simulation.Battle.Services;
 using StatHammer.Server.Simulation.Dice.Services;
+using StatHammer.Server.Simulation.Models;
 
 namespace StatHammer.Server.PageServices.Simulations
 {
@@ -46,6 +47,7 @@ namespace StatHammer.Server.PageServices.Simulations
             bool useParallel,
             int maxDegreeOfParallelism,
             bool saveResult,
+            SimulationModifiers modifiers,
             CancellationToken cancellationToken = default)
         {
             BattleSimulationBatchResult result;
@@ -60,7 +62,8 @@ namespace StatHammer.Server.PageServices.Simulations
                     unitAPrefersMelee: false,
                     unitBPrefersMelee: false,
                     maxDegreeOfParallelism,
-                    cancellationToken);
+                    cancellationToken,
+                    modifiers);
             }
             else
             {
@@ -71,7 +74,8 @@ namespace StatHammer.Server.PageServices.Simulations
                     maxTurns,
                     unitAPrefersMelee: false,
                     unitBPrefersMelee: false,
-                    cancellationToken);
+                    cancellationToken,
+                    modifiers);
             }
 
             var viewModel = new SimulationRunViewModel
@@ -93,5 +97,4 @@ namespace StatHammer.Server.PageServices.Simulations
             return viewModel;
         }
     }
-
 }

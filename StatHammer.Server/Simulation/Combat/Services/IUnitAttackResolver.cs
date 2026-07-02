@@ -7,6 +7,8 @@ namespace StatHammer.Server.Simulation.Combat.Services
     {
         UnitAttackResult ResolveRangedAttack(
             SimulationUnit attacker,
-            SimulationUnit defender);
+            SimulationUnit defender,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null);
     }
 }

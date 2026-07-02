@@ -29,7 +29,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
             bool unitAPrefersMelee,
             bool unitBPrefersMelee,
             int maxDegreeOfParallelism,
-            CancellationToken cancellationToken = default)
+            CancellationToken cancellationToken = default,
+            SimulationModifiers? modifiers = null)
         {
             if (simulationCount <= 0)
             {
@@ -146,7 +147,8 @@ namespace StatHammer.Server.Simulation.Battle.Services
                         var simulation = battleSimulationService.SimulateBattle(
                             unitA,
                             unitB,
-                            maxTurns);
+                            maxTurns,
+                            modifiers);
 
                         simulationStopwatch.Stop();
                         simulateBattlesElapsed += simulationStopwatch.Elapsed;

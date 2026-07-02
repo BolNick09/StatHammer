@@ -9,6 +9,8 @@ namespace StatHammer.Server.Simulation.Combat.Services
             SimulationModel attacker,
             SimulationModel defender,
             SimulationWeapon weapon,
-            SimulationWeaponProfile weaponProfile);
+            SimulationWeaponProfile weaponProfile,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null);
     }
 }

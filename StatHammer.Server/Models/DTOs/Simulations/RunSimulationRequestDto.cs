@@ -22,5 +22,29 @@ namespace StatHammer.Server.Models.DTOs.Simulations
         public int MaxDegreeOfParallelism { get; set; } = Environment.ProcessorCount;
 
         public bool SaveResult { get; set; } = true;
+
+        [Range(-3, 3)]
+        public int UnitAHitModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitAWoundModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitAArmorPiercingModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitASaveModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitBHitModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitBWoundModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitBArmorPiercingModifier { get; set; }
+
+        [Range(-3, 3)]
+        public int UnitBSaveModifier { get; set; }
     }
 }

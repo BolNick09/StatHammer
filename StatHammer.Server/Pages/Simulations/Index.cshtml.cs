@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using StatHammer.Server.PageServices.Simulations;
+using StatHammer.Server.Simulation.Models;
 using System.ComponentModel.DataAnnotations;
 
 namespace StatHammer.Server.Pages.Simulations
@@ -42,6 +43,24 @@ namespace StatHammer.Server.Pages.Simulations
                 return Page();
             }
 
+            var modifiers = new SimulationModifiers
+            {
+                UnitA = new UnitCombatModifiers
+                {
+                    HitModifier = Input.UnitAHitModifier,
+                    WoundModifier = Input.UnitAWoundModifier,
+                    ArmorPiercingModifier = Input.UnitAArmorPiercingModifier,
+                    SaveModifier = Input.UnitASaveModifier
+                },
+                UnitB = new UnitCombatModifiers
+                {
+                    HitModifier = Input.UnitBHitModifier,
+                    WoundModifier = Input.UnitBWoundModifier,
+                    ArmorPiercingModifier = Input.UnitBArmorPiercingModifier,
+                    SaveModifier = Input.UnitBSaveModifier
+                }
+            };
+
             RunResult = await _simulationPageService.RunSimulationAsync(
                 Input.UnitAId,
                 Input.UnitBId,
@@ -50,6 +69,7 @@ namespace StatHammer.Server.Pages.Simulations
                 Input.UseParallel,
                 Input.MaxDegreeOfParallelism,
                 Input.SaveResult,
+                modifiers,
                 cancellationToken);
 
             return Page();
@@ -82,7 +102,38 @@ namespace StatHammer.Server.Pages.Simulations
 
             [Display(Name = "Сохранить результат в БД")]
             public bool SaveResult { get; set; } = true;
+
+            [Range(-3, 3)]
+            [Display(Name = "Hit")]
+            public int UnitAHitModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "Wound")]
+            public int UnitAWoundModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "AP")]
+            public int UnitAArmorPiercingModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "Save")]
+            public int UnitASaveModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "Hit")]
+            public int UnitBHitModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "Wound")]
+            public int UnitBWoundModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "AP")]
+            public int UnitBArmorPiercingModifier { get; set; }
+
+            [Range(-3, 3)]
+            [Display(Name = "Save")]
+            public int UnitBSaveModifier { get; set; }
         }
     }
-
 }

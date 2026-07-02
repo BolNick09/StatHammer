@@ -8,6 +8,7 @@ namespace StatHammer.Server.Simulation.Battle.Services
         BattleSimulationResult SimulateBattle(
             SimulationUnit unitA,
             SimulationUnit unitB,
-            int maxTurns);
+            int maxTurns,
+            SimulationModifiers? modifiers = null);
     }
 }

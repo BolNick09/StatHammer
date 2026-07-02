@@ -7,6 +7,8 @@ namespace StatHammer.Server.Simulation.Combat.Services
     {
         UnitRangedPhaseResult ResolveRangedPhase(
             SimulationUnit attacker,
-            SimulationUnit defender);
+            SimulationUnit defender,
+            UnitCombatModifiers? attackerModifiers = null,
+            UnitCombatModifiers? defenderModifiers = null);
     }
 }

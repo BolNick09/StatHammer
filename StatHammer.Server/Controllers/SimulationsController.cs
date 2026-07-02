@@ -5,6 +5,7 @@ using StatHammer.Server.Models.DTOs.Simulations;
 using StatHammer.Server.Simulation.Battle.Models.Aggregation;
 using StatHammer.Server.Simulation.Battle.Services;
 using StatHammer.Server.Simulation.Dice.Services;
+using StatHammer.Server.Simulation.Models;
 
 
 namespace StatHammer.Server.Controllers
@@ -37,6 +38,23 @@ namespace StatHammer.Server.Controllers
             {
                 return BadRequest("UnitAId and UnitBId must be different.");
             }
+            var modifiers = new SimulationModifiers
+            {
+                UnitA = new UnitCombatModifiers
+                {
+                    HitModifier = dto.UnitAHitModifier,
+                    WoundModifier = dto.UnitAWoundModifier,
+                    ArmorPiercingModifier = dto.UnitAArmorPiercingModifier,
+                    SaveModifier = dto.UnitASaveModifier
+                },
+                UnitB = new UnitCombatModifiers
+                {
+                    HitModifier = dto.UnitBHitModifier,
+                    WoundModifier = dto.UnitBWoundModifier,
+                    ArmorPiercingModifier = dto.UnitBArmorPiercingModifier,
+                    SaveModifier = dto.UnitBSaveModifier
+                }
+            };
 
             BattleSimulationBatchResult result;
 
